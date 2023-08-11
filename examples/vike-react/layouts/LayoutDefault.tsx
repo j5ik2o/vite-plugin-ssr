@@ -1,11 +1,9 @@
-export default LayoutDefault
+import './style.css';
+import React from 'react';
+import logoUrl from '../assets/logo.svg';
+import { Link } from '../components/Link';
 
-import './style.css'
-import React from 'react'
-import logoUrl from '../assets/logo.svg'
-import { Link } from '../components/Link'
-
-function LayoutDefault({ children }: { children: React.ReactNode }) {
+const LayoutDefault = ({ children }: { children: React.ReactNode }) => {
   return (
     <div
       style={{
@@ -21,10 +19,10 @@ function LayoutDefault({ children }: { children: React.ReactNode }) {
       </Sidebar>
       <Content>{children}</Content>
     </div>
-  )
+  );
 }
 
-function Sidebar({ children }: { children: React.ReactNode }) {
+const Sidebar = ({ children }: { children: React.ReactNode }) => {
   return (
     <div
       id="sidebar"
@@ -42,7 +40,7 @@ function Sidebar({ children }: { children: React.ReactNode }) {
   )
 }
 
-function Content({ children }: { children: React.ReactNode }) {
+const Content = ({ children }: { children: React.ReactNode }) => {
   return (
     <div id="page-container">
       <div
@@ -56,10 +54,10 @@ function Content({ children }: { children: React.ReactNode }) {
         {children}
       </div>
     </div>
-  )
+  );
 }
 
-function Logo() {
+const Logo = () => {
   return (
     <div
       style={{
@@ -71,5 +69,7 @@ function Logo() {
         <img src={logoUrl} height={64} width={64} />
       </a>
     </div>
-  )
+  );
 }
+
+export default LayoutDefault;

@@ -1,10 +1,3 @@
-export { render }
-export { onHydrationEnd }
-export { onPageTransitionStart }
-export { onPageTransitionEnd }
-export const clientRouting = true
-export const hydrationCanBeAborted = true
-
 import './css/index.css'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
@@ -13,33 +6,40 @@ import { getPageTitle } from './getPageTitle'
 import type { PageContextClient } from './types'
 
 let root: ReactDOM.Root
-async function render(pageContext: PageContextClient) {
-  const { Page, pageProps } = pageContext
+
+const render = async (pageContext: PageContextClient) => {
+  const { Page, pageProps } = pageContext;
   const page = (
     <PageShell pageContext={pageContext}>
       <Page {...pageProps} />
     </PageShell>
-  )
-  const container = document.getElementById('page-view')!
+  );
+  const container = document.getElementById('page-view')!;
   if (pageContext.isHydration) {
-    root = ReactDOM.hydrateRoot(container, page)
+    root = ReactDOM.hydrateRoot(container, page);
   } else {
     if (!root) {
-      root = ReactDOM.createRoot(container)
+      root = ReactDOM.createRoot(container);
     }
-    root.render(page)
+    root.render(page);  
   }
-  document.title = getPageTitle(pageContext)
+  document.title = getPageTitle(pageContext);
 }
 
-function onHydrationEnd() {
-  console.log('Hydration finished; page is now interactive.')
+const onHydrationEnd = () => {
+  console.log('Hydration finished; page is now interactive.');
 }
-function onPageTransitionStart() {
-  console.log('Page transition start')
-  document.querySelector('body')!.classList.add('page-is-transitioning')
+
+const onPageTransitionStart = () => {
+  console.log('Page transition start');
+  document.querySelector('body')!.classList.add('page-is-transitioning');
 }
-function onPageTransitionEnd() {
+
+const onPageTransitionEnd = () => {
   console.log('Page transition end')
   document.querySelector('body')!.classList.remove('page-is-transitioning')
 }
+
+export { render, onHydrationEnd, onPageTransitionStart, onPageTransitionEnd };
+export const clientRouting = true;
+export const hydrationCanBeAborted = true;

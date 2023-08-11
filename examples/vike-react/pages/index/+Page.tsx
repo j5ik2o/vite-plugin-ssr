@@ -1,9 +1,7 @@
-export default Page
-
 import React from 'react'
 import { Counter } from './Counter'
 
-function Page() {
+const Page = () => {
   return (
     <>
       <h1>My Vike + React app</h1>
@@ -15,5 +13,7 @@ function Page() {
         </li>
       </ul>
     </>
-  )
+  );
 }
+
+export default Page;

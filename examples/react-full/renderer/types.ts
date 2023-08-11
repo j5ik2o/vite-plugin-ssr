@@ -1,8 +1,3 @@
-export type { PageContextServer }
-export type { PageContextClient }
-export type { PageContext }
-export type { PageProps }
-
 import type {
   PageContextBuiltIn,
   //*
@@ -17,7 +12,7 @@ import type {
 type Page = (pageProps: PageProps) => React.ReactElement
 type PageProps = Record<string, unknown>
 
-export type PageContextCustom = {
+type PageContextCustom = {
   Page: Page
   pageProps?: PageProps
   exports: {
@@ -34,3 +29,6 @@ type PageContextServer = PageContextBuiltIn<Page> & PageContextCustom
 type PageContextClient = PageContextBuiltInClient<Page> & PageContextCustom
 
 type PageContext = PageContextClient | PageContextServer
+
+export { PageContextCustom };
+export type { PageContextServer, PageContextClient, PageContext, PageProps };

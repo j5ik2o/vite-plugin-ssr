@@ -1,8 +1,6 @@
 import React from 'react'
 
-export { Page }
-
-function Page({
+const Page = ({
   is404,
   errorTitle,
   errorDescription
@@ -10,7 +8,7 @@ function Page({
   is404: boolean
   errorTitle?: string
   errorDescription?: string
-}) {
+}) => {
   if (is404) {
     errorTitle ??= '404 Page Not Found'
     errorDescription ??= 'This page could not be found.'
@@ -23,5 +21,7 @@ function Page({
       <h1>{errorTitle}</h1>
       <p>{errorDescription}</p>
     </>
-  )
+  );
 }
+
+export { Page };

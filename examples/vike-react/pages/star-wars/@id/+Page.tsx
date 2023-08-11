@@ -1,9 +1,7 @@
-export default Page
-
 import React from 'react'
 import type { MovieDetails } from '../types'
 
-function Page({ movie }: { movie: MovieDetails }) {
+const Page = ({ movie }: { movie: MovieDetails }) => {
   return (
     <>
       <h1>{movie.title}</h1>
@@ -13,5 +11,6 @@ function Page({ movie }: { movie: MovieDetails }) {
       <br />
       Producer: {movie.producer}
     </>
-  )
+  );
 }
+export default Page;

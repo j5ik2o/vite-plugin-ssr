@@ -1,12 +1,15 @@
-export type Movie = {
+type Movie = {
   id: string
   title: string
   release_date: string
 }
-export type MovieDetails = {
+
+type MovieDetails = {
   id: string
   title: string
   release_date: string
   director: string
   producer: string
 }
+
+export type { Movie, MovieDetails };

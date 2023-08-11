@@ -5,13 +5,11 @@ import { PageShell } from './PageShell'
 import { getPageTitle } from './getPageTitle'
 import type { PageContextServer } from './types'
 
-export { render }
-export { passToClient }
 
 const passToClient = ['pageProps', 'documentProps', 'someAsyncProps']
 
-async function render(pageContext: PageContextServer) {
-  const { Page, pageProps } = pageContext
+const render = async (pageContext: PageContextServer) => {
+  const { Page, pageProps } = pageContext;
 
   const stream = await renderToStream(
     <PageShell pageContext={pageContext}>
@@ -19,9 +17,9 @@ async function render(pageContext: PageContextServer) {
     </PageShell>,
     // We don't need react-streaming for this app. (We use it merely to showcase that VPS can handle react-streaming with a pre-rendered app. Note that using react-streaming with pre-rendering can make sense if we want to be able to use React's latest <Suspsense> techniques.)
     { disable: true }
-  )
+  );
 
-  const title = getPageTitle(pageContext)
+  const title = getPageTitle(pageContext);
 
   const documentHtml = escapeInject`<!DOCTYPE html>
     <html>
@@ -31,7 +29,7 @@ async function render(pageContext: PageContextServer) {
       <body>
         <div id="page-view">${stream}</div>
       </body>
-    </html>`
+    </html>`;
 
   return {
     documentHtml,
@@ -41,5 +39,7 @@ async function render(pageContext: PageContextServer) {
         someAsyncProps: 42
       }
     }
-  }
+  };
 }
+
+export { render, passToClient }

@@ -4,9 +4,7 @@ import { PageContextProvider } from './usePageContext'
 import { Link } from './Link'
 import type { PageContext } from './types'
 
-export { PageShell }
-
-function PageShell({ pageContext, children }: { pageContext: PageContext; children: React.ReactNode }) {
+const PageShell = ({ pageContext, children }: { pageContext: PageContext; children: React.ReactNode }) => {
   return (
     <React.StrictMode>
       <PageContextProvider pageContext={pageContext}>
@@ -22,10 +20,10 @@ function PageShell({ pageContext, children }: { pageContext: PageContext; childr
         </Layout>
       </PageContextProvider>
     </React.StrictMode>
-  )
+  );
 }
 
-function Layout({ children }: { children: React.ReactNode }) {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div
       style={{
@@ -36,10 +34,10 @@ function Layout({ children }: { children: React.ReactNode }) {
     >
       {children}
     </div>
-  )
+  );
 }
 
-function Sidebar({ children }: { children: React.ReactNode }) {
+const Sidebar = ({ children }: { children: React.ReactNode }) => {
   return (
     <div
       id="sidebar"
@@ -54,10 +52,10 @@ function Sidebar({ children }: { children: React.ReactNode }) {
     >
       {children}
     </div>
-  )
+  );
 }
 
-function Content({ children }: { children: React.ReactNode }) {
+const Content = ({ children }: { children: React.ReactNode }) => {
   return (
     <div id="page-container">
       <div
@@ -71,10 +69,10 @@ function Content({ children }: { children: React.ReactNode }) {
         {children}
       </div>
     </div>
-  )
+  );
 }
 
-function Logo() {
+const Logo = () => {
   return (
     <div
       style={{
@@ -86,5 +84,7 @@ function Logo() {
         <img src={logoUrl} height={64} width={64} />
       </a>
     </div>
-  )
+  );
 }
+
+export { PageShell }

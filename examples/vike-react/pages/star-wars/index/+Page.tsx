@@ -1,9 +1,7 @@
-export default Page
+import React from 'react';
+import type { Movie } from '../types';
 
-import React from 'react'
-import type { Movie } from '../types'
-
-function Page({ movies }: { movies: Movie[] }) {
+const Page = ({ movies }: { movies: Movie[] }) => {
   return (
     <>
       <h1>Star Wars Movies</h1>
@@ -18,5 +16,7 @@ function Page({ movies }: { movies: Movie[] }) {
         Source: <a href="https://star-wars.brillout.com">star-wars.brillout.com</a>.
       </p>
     </>
-  )
+  );
 }
+
+export default Page;

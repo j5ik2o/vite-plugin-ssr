@@ -1,8 +1,6 @@
 import React from 'react'
 import type { Movie } from '../types'
 
-export { Page }
-
 function Page({ movies }: { movies: Movie[] }) {
   return (
     <>
@@ -23,3 +21,5 @@ function Page({ movies }: { movies: Movie[] }) {
     </>
   )
 }
+
+export { Page };

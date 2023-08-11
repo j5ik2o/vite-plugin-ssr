@@ -1,8 +1,6 @@
 import React from 'react'
 
-export { Page }
-
-function Page({ name }: { name: string }) {
+const Page = ({ name }: { name: string }) => {
   return (
     <>
       <h1>Hello</h1>
@@ -21,5 +19,7 @@ function Page({ name }: { name: string }) {
         Parameterized routes can be defined by exporting a route string in <code>*.page.route.js</code>.
       </p>
     </>
-  )
+  );
 }
+
+export { Page };
