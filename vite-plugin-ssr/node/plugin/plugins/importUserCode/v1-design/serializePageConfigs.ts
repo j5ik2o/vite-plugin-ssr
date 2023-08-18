@@ -2,11 +2,15 @@
 
 export { serializePageConfigs }
 
-import { assert, assertUsage, objectEntries } from '../../../utils'
-import type { ConfigElement, PageConfigData, PageConfigGlobalData } from '../../../../../shared/page-configs/PageConfig'
-import { generateEagerImport } from '../generateEagerImport'
-import { getVirtualFileIdImportPageCode } from '../../../../shared/virtual-files/virtualFileImportPageCode'
-import { debug } from './debug'
+import { assert, assertUsage, objectEntries } from '../../../utils.js'
+import type {
+  ConfigElement,
+  PageConfigData,
+  PageConfigGlobalData
+} from '../../../../../shared/page-configs/PageConfig.js'
+import { generateEagerImport } from '../generateEagerImport.js'
+import { getVirtualFileIdImportPageCode } from '../../../../shared/virtual-files/virtualFileImportPageCode.js'
+import { debug } from './debug.js'
 import { stringify } from '@brillout/json-serializer/stringify'
 
 function serializePageConfigs(

@@ -1,8 +1,8 @@
 export { log404 }
 export { getPagesAndRoutesInfo }
 
-import type { PageRoutes } from '../../../../shared/route'
-import { getGlobalContext } from '../../globalContext'
+import type { PageRoutes } from '../../../../shared/route/index.js'
+import { getGlobalContext } from '../../globalContext.js'
 import {
   assert,
   assertUsage,
@@ -11,7 +11,7 @@ import {
   stripAnsi,
   getTerminalWidth,
   truncateString
-} from '../../utils'
+} from '../../utils.js'
 import pc from '@brillout/picocolors'
 
 async function log404(pageContext: {

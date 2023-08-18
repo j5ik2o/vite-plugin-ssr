@@ -1,5 +1,5 @@
-import { resolvePrecendence } from '../resolvePrecedence'
-import { resolveRouteString } from '../resolveRouteString'
+import { resolvePrecendence } from '../resolvePrecedence.js'
+import { resolveRouteString } from '../resolveRouteString.js'
 import { expect, describe, it } from 'vitest'
 
 describe('Route Strings Precedence', () => {

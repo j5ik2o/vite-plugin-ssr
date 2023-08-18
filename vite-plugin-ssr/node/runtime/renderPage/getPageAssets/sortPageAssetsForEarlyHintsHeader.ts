@@ -1,8 +1,8 @@
 export { sortPageAssetsForEarlyHintsHeader }
 
-import { getGlobalContext } from '../../globalContext'
-import { higherFirst } from '../../utils'
-import type { PageAsset } from '../getPageAssets'
+import { getGlobalContext } from '../../globalContext.js'
+import { higherFirst } from '../../utils.js'
+import type { PageAsset } from '../getPageAssets.js'
 
 function sortPageAssetsForEarlyHintsHeader(pageAssets: PageAsset[]) {
   const globalContext = getGlobalContext()

@@ -2,14 +2,13 @@
 
 export { parseUrl }
 export { isParsable }
-export { prependBase }
 export { assertUsageUrl }
-export { normalizeBaseServer }
 export { isBaseServer }
-export { isBaseAssets }
+export { assertUrlComponents }
+export { createUrlFromComponents }
 
-import { slice } from './slice'
-import { assert, assertUsage } from './assert'
+import { slice } from './slice.js'
+import { assert, assertUsage } from './assert.js'
 
 function isParsable(url: string): boolean {
   // `parseUrl()` works with these URLs
@@ -81,10 +80,8 @@ function parseUrl(
 
   // `pathnameOriginal`
   const pathnameOriginal = urlWithoutSearch.slice((origin || '').length)
-  {
-    const urlRecreated = `${origin || ''}${pathnameOriginal}${searchOriginal || ''}${hashOriginal || ''}`
-    assert(url === urlRecreated, { url, urlRecreated })
-  }
+
+  assertUrlComponents(url, origin, pathnameOriginal, searchOriginal, hashOriginal)
 
   // Base URL
   let { pathname, hasBaseServer } = analyzeBaseServer(pathnameResolved, baseServer)
@@ -233,46 +230,26 @@ function analyzeBaseServer(
   return { pathname: urlPathname, hasBaseServer: true }
 }
 
-function prependBase(url: string, baseServer: string): string {
-  if (baseServer.startsWith('http')) {
-    const baseAssets = baseServer
-    const baseAssetsNormalized = normalizeBaseAssets(baseAssets)
-    assert(!baseAssetsNormalized.endsWith('/'))
-    assert(url.startsWith('/'))
-    return `${baseAssetsNormalized}${url}`
-  }
-  assert(isBaseServer(baseServer))
-
-  const baseServerNormalized = normalizeBaseServer(baseServer)
-
-  if (baseServerNormalized === '/') return url
-
-  assert(!baseServerNormalized.endsWith('/'))
-  assert(url.startsWith('/'))
-  return `${baseServerNormalized}${url}`
-}
-
-function normalizeBaseServer(baseServer: string) {
-  let baseServerNormalized = baseServer
-  if (baseServerNormalized.endsWith('/') && baseServerNormalized !== '/') {
-    baseServerNormalized = slice(baseServerNormalized, 0, -1)
-  }
-  // We can and should expect `baseServer` to not contain `/` doublets.
-  assert(!baseServerNormalized.endsWith('/') || baseServerNormalized === '/')
-  return baseServerNormalized
-}
-
 function isBaseServer(baseServer: string): boolean {
   return baseServer.startsWith('/')
 }
-function isBaseAssets(base: string): boolean {
-  return base.startsWith('/') || base.startsWith('http://') || base.startsWith('https://')
+
+function assertUrlComponents(
+  url: string,
+  origin: string | null,
+  pathname: string,
+  searchOriginal: string | null,
+  hashOriginal: string | null
+) {
+  const urlRecreated = createUrlFromComponents(origin, pathname, searchOriginal, hashOriginal)
+  assert(url === urlRecreated, { url, urlRecreated })
 }
-function normalizeBaseAssets(baseAssets: string) {
-  let baseAssetsNormalized = baseAssets
-  if (baseAssetsNormalized.endsWith('/')) {
-    baseAssetsNormalized = slice(baseAssetsNormalized, 0, -1)
-  }
-  assert(!baseAssetsNormalized.endsWith('/'))
-  return baseAssetsNormalized
+function createUrlFromComponents(
+  origin: string | null,
+  pathname: string,
+  searchOriginal: string | null,
+  hashOriginal: string | null
+) {
+  const urlRecreated = `${origin || ''}${pathname}${searchOriginal || ''}${hashOriginal || ''}`
+  return urlRecreated
 }

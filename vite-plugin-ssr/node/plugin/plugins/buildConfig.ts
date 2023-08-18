@@ -12,18 +12,22 @@ import {
   unique,
   assertPosixPath,
   assertUsage
-} from '../utils'
-import { virtualFileIdImportUserCodeServer } from '../../shared/virtual-files/virtualFileImportUserCode'
-import { getVikeConfig } from './importUserCode/v1-design/getVikeConfig'
-import { getCodeFilePath, getConfigValue } from '../../../shared/page-configs/utils'
-import { findPageFiles } from '../shared/findPageFiles'
-import { getConfigVps } from '../../shared/getConfigVps'
+} from '../utils.js'
+import { virtualFileIdImportUserCodeServer } from '../../shared/virtual-files/virtualFileImportUserCode.js'
+import { getVikeConfig } from './importUserCode/v1-design/getVikeConfig.js'
+import { getCodeFilePath, getConfigValue } from '../../../shared/page-configs/utils.js'
+import { findPageFiles } from '../shared/findPageFiles.js'
+import { getConfigVps } from '../../shared/getConfigVps.js'
 import type { ResolvedConfig, Plugin, Rollup, UserConfig } from 'vite'
-import { getVirtualFileIdImportPageCode } from '../../shared/virtual-files/virtualFileImportPageCode'
-import type { PageConfigData } from '../../../shared/page-configs/PageConfig'
-import type { FileType } from '../../../shared/getPageFiles/fileTypes'
-import { extractAssetsAddQuery } from '../../shared/extractAssetsQuery'
+import { getVirtualFileIdImportPageCode } from '../../shared/virtual-files/virtualFileImportPageCode.js'
+import type { PageConfigData } from '../../../shared/page-configs/PageConfig.js'
+import type { FileType } from '../../../shared/getPageFiles/fileTypes.js'
+import { extractAssetsAddQuery } from '../../shared/extractAssetsQuery.js'
 type InputOption = Rollup.InputOption
+import { createRequire } from 'module'
+// @ts-ignore Shimed by dist-cjs-fixup.js for CJS build.
+const importMetaUrl: string = import.meta.url
+const require_ = createRequire(importMetaUrl)
 
 function buildConfig(): Plugin {
   return {
@@ -69,7 +73,7 @@ async function getEntries(config: ResolvedConfig): Promise<Record<string, string
     const serverEntries = analyzeServerEntries(pageConfigsData)
     const entries = {
       pageFiles: virtualFileIdImportUserCodeServer, // TODO/next-major-release: rename to configFiles
-      importBuild: resolve('dist/cjs/node/importBuild.js'), // TODO/next-major-release: remove
+      importBuild: resolve('dist/esm/node/importBuild.js'), // TODO/next-major-release: remove
       ...pageFileEntries,
       ...serverEntries
     }
@@ -84,8 +88,8 @@ async function getEntries(config: ResolvedConfig): Promise<Record<string, string
       ...clientEntries,
       ...pageFileEntries
     }
-    const clientRoutingEntry = resolve(`dist/esm/client/router/entry.js`)
-    const serverRoutingEntry = resolve(`dist/esm/client/entry.js`)
+    const clientRoutingEntry = resolve(`dist/esm/client/client-routing-runtime/entry.js`)
+    const serverRoutingEntry = resolve(`dist/esm/client/server-routing-runtime/entry.js`)
     if (hasClientRouting) {
       entries['entries/entry-client-routing'] = clientRoutingEntry
     }
@@ -192,8 +196,8 @@ function prependEntriesDir(entryName: string): string {
 
 function resolve(filePath: string) {
   assert(filePath.startsWith('dist/'))
-  // [RELATIVE_PATH_FROM_DIST] Current directory: node_modules/vite-plugin-ssr/dist/cjs/node/plugin/plugins/
-  return require.resolve(`../../../../../${filePath}`)
+  // [RELATIVE_PATH_FROM_DIST] Current directory: node_modules/vite-plugin-ssr/dist/esm/node/plugin/plugins/
+  return require_.resolve(`../../../../../${filePath}`)
 }
 
 function normalizeRollupInput(input?: InputOption): Record<string, string> {

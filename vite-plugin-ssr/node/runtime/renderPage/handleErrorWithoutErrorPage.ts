@@ -1,13 +1,13 @@
 export { handleErrorWithoutErrorPage }
 
 import { stringify } from '@brillout/json-serializer/stringify'
-import { getGlobalContext } from '../globalContext'
-import { assert, assertWarning, objectAssign } from '../utils'
-import { createHttpResponseObject } from './createHttpResponseObject'
+import { getGlobalContext } from '../globalContext.js'
+import { assert, assertWarning, objectAssign } from '../utils.js'
+import { createHttpResponseObject } from './createHttpResponseObject.js'
 import pc from '@brillout/picocolors'
-import type { GetPageAssets } from './getPageAssets'
-import type { PageContextAfterRender } from './renderPageAlreadyRouted'
-import type { PageConfig } from '../../../shared/page-configs/PageConfig'
+import type { GetPageAssets } from './getPageAssets.js'
+import type { PageContextAfterRender } from './renderPageAlreadyRouted.js'
+import type { PageConfig } from '../../../shared/page-configs/PageConfig.js'
 
 // When the user hasn't defined _error.page.js
 async function handleErrorWithoutErrorPage<

@@ -1,6 +1,6 @@
 export { getFileExtension }
 
-import { slice } from './slice'
+import { slice } from './slice.js'
 
 function getFileExtension(id: string) {
   id = id.split('?')[0]!

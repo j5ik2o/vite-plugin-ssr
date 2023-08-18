@@ -3,8 +3,8 @@
 export { parsePageConfigs }
 
 import { parse } from '@brillout/json-serializer/parse'
-import type { ConfigElement, PageConfig } from '../page-configs/PageConfig'
-import { assert, assertUsage, hasProp, isCallable } from '../utils'
+import type { ConfigElement, PageConfig } from '../page-configs/PageConfig.js'
+import { assert, assertUsage, hasProp, isCallable } from '../utils.js'
 
 function parsePageConfigs(pageConfigs: PageConfig[]) {
   pageConfigs.forEach((pageConfig) => {

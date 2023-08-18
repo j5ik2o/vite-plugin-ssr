@@ -1,13 +1,13 @@
 export { previewConfig }
 
 import type { Plugin, ResolvedConfig } from 'vite'
-import { assertUsage, getOutDirs, resolveOutDir, markEnvAsPreview } from '../utils'
-import { getConfigVps } from '../../shared/getConfigVps'
+import { assertUsage, getOutDirs, resolveOutDir, markEnvAsPreview } from '../utils.js'
+import { getConfigVps } from '../../shared/getConfigVps.js'
 import fs from 'fs'
 import path from 'path'
 import type { ViteDevServer } from 'vite'
-import type { ConfigVpsResolved } from '../../../shared/ConfigVps'
-import { addSsrMiddleware } from '../shared/addSsrMiddleware'
+import type { ConfigVpsResolved } from '../../../shared/ConfigVps.js'
+import { addSsrMiddleware } from '../shared/addSsrMiddleware.js'
 type ConnectServer = ViteDevServer['middlewares']
 
 function previewConfig(): Plugin {

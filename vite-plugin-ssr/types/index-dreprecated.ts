@@ -1,9 +1,6 @@
 // Same as ./index.ts but with deprecation notice.
 
-// TODO/v1-release:
-//  - remove this file
-//  - create types/tsconfig.json => dist/types/
-//  - remove all `.d.ts` from dist/cjs/ and dist/esm/
+// TODO/v1-release: remove this file
 
 export type {
   PageContextBuiltIn,
@@ -22,7 +19,7 @@ import type {
   Config as Config_,
   Env as Env_,
   ConfigEntries as ConfigEntries_
-} from './index'
+} from './index.js'
 
 /** @deprecated All types have been moved to `vite-plugin-ssr/types`.
  * Replace:

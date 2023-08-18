@@ -2,13 +2,16 @@ export { getFilePathAbsolute }
 export { getFilePathVite }
 
 import type { ResolvedConfig } from 'vite'
-import { assertPosixPath, toPosixPath } from './filesystemPathHandling'
-import { assert } from './assert'
+import { assertPosixPath, toPosixPath } from './filesystemPathHandling.js'
+import { assert } from './assert.js'
 import path from 'path'
-import { assertIsNotProductionRuntime } from './assertIsNotProductionRuntime'
-import { isNpmPackageImport } from './isNpmPackage'
-import { assertPathIsFilesystemAbsolute } from './assertPathIsFilesystemAbsolute'
-
+import { assertIsNotProductionRuntime } from './assertIsNotProductionRuntime.js'
+import { isNpmPackageImport } from './isNpmPackage.js'
+import { assertPathIsFilesystemAbsolute } from './assertPathIsFilesystemAbsolute.js'
+import { createRequire } from 'module'
+// @ts-ignore Shimed by dist-cjs-fixup.js for CJS build.
+const importMetaUrl: string = import.meta.url
+const require_ = createRequire(importMetaUrl)
 assertIsNotProductionRuntime()
 
 // Vite handles paths such as /pages/index.page.js which are relative to `config.root`.
@@ -34,7 +37,7 @@ function getFilePathAbsolute(filePath: string, config: ResolvedConfig): string {
 
   let filePathAbsolute: string
   try {
-    filePathAbsolute = require.resolve(filePathUnresolved, { paths: [config.root] })
+    filePathAbsolute = require_.resolve(filePathUnresolved, { paths: [config.root] })
   } catch (err) {
     console.error(err)
     assert(false)

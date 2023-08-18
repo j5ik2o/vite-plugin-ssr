@@ -1,7 +1,7 @@
 export { warnIfObjectIsNotObject }
 
-import { assertWarning } from './assert'
-import { isObject } from './isObject'
+import { assertWarning } from './assert.js'
+import { isObject } from './isObject.js'
 
 function warnIfObjectIsNotObject(err: unknown): void {
   if (!isObject(err)) {

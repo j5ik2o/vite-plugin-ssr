@@ -1,6 +1,3 @@
-- improve redirect logging
-- Catch infinite redirect/rewrite
-  - Also for resolveRedirects()
 - Seems like passToClient is already cumulative for 0.4 design, should be as well for v1 design
   - https://github.com/vikejs/vike-react/issues/4
 
@@ -50,6 +47,8 @@ Contact:
  - Payload CMS
    - Other CMS-related tools like Tina CMS
  - Shopify
+ - https://gadget.dev/
+   - https://twitter.com/harrybrundage/status/1691760859935109125
  - Deno Deploy
  - Cloudflare Workers
  - UI frameworks like qwik (maybe even Angular)

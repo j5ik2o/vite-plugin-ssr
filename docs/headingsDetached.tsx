@@ -291,10 +291,18 @@ const headingsDetached = [
   {
     title: 'Abort',
     url: '/abort',
-    sectionTitles: ['`throw redirect()` VS `throw render()`', 'How to debug']
+    sectionTitles: ['`throw redirect()` VS `throw render()`']
   },
   {
     title: 'Page Redirection',
     url: '/page-redirection'
+  },
+  {
+    title: (
+      <>
+        Migration <code>0.5</code>
+      </>
+    ),
+    url: '/migration/0.5'
   }
 ] satisfies HeadingDetachedDefinition[]

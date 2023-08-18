@@ -6,10 +6,10 @@ export { onProjectInfo }
 //  - Show warning if entry of Client Routing and entry of Server Routing are both loaded
 //  - Show warning if vite-plugin-ssr is loaded twice
 
-import { unique } from './unique'
-import { getGlobalObject } from './getGlobalObject'
+import { unique } from './unique.js'
+import { getGlobalObject } from './getGlobalObject.js'
 /* Use original assertUsage() & assertWarning() after all CJS is removed from node_modules/vite-plugin-ssr/dist/
-import { assertUsage, assertWarning } from './assert'
+import { assertUsage, assertWarning } from './assert.js'
 */
 const globalObject = getGlobalObject<{
   instances: string[]

@@ -1,7 +1,7 @@
 export { resolveExtensions }
 
 import type { ResolvedConfig } from 'vite'
-import type { ConfigVpsUserProvided, ExtensionResolved } from '../../../../shared/ConfigVps'
+import type { ConfigVpsUserProvided, ExtensionResolved } from '../../../../shared/ConfigVps.js'
 import {
   assert,
   assertUsage,
@@ -10,10 +10,14 @@ import {
   isNpmPackageName,
   getDependencyRootDir,
   assertPosixPath
-} from '../../utils'
+} from '../../utils.js'
 import path from 'path'
 import fs from 'fs'
-import { isValidFileType } from '../../../../shared/getPageFiles/fileTypes'
+import { isValidFileType } from '../../../../shared/getPageFiles/fileTypes.js'
+import { createRequire } from 'module'
+// @ts-ignore Shimed by dist-cjs-fixup.js for CJS build.
+const importMetaUrl: string = import.meta.url
+const require_ = createRequire(importMetaUrl)
 
 function resolveExtensions(configs: ConfigVpsUserProvided[], config: ResolvedConfig): ExtensionResolved[] {
   const extensions = configs.map((c) => c.extensions ?? []).flat()
@@ -107,7 +111,7 @@ function resolvePageFilesDist(
       npmPackageName === getNpmPackageName(importPath),
       `${errPrefix} be a ${npmPackageName} module (e.g. '${npmPackageName}/renderer/_default.page.server.js')`
     )
-    assertUsage(isValidFileType(importPath), `${errPrefix} end with '.js', '.mjs', '.cjs', or '.css'`)
+    assertUsage(isValidFileType(importPath), `${errPrefix} end with '.js', '.js', '.cjs', or '.css'`)
 
     const filePath = resolveImportPath(importPath, npmPackageName, config, npmPackageRootDir)
     pageConfigsDistFilesResolved.push({
@@ -140,7 +144,7 @@ function resolveImportPath(
 ): string {
   let filePath: string
   try {
-    filePath = require.resolve(importPath, { paths: [config.root] })
+    filePath = require_.resolve(importPath, { paths: [config.root] })
   } catch (err: any) {
     if (err?.code === 'ERR_PACKAGE_PATH_NOT_EXPORTED') {
       assertUsage(

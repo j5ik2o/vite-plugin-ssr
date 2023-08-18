@@ -2,8 +2,8 @@ export { PageContextBuiltIn }
 export { PageContextBuiltInClientWithClientRouting }
 export { PageContextBuiltInClientWithServerRouting }
 
-import type { PageContextUrlsPublic } from './addComputedUrlProps'
-import type { ConfigEntries, ExportsAll } from './getPageFiles/getExports'
+import type { PageContextUrlComputedPropsPublic } from './UrlComputedProps.js'
+import type { ConfigEntries, ExportsAll } from './getPageFiles/getExports.js'
 
 /** Built-in `pageContext` properties set by vite-plugin-ssr.
  *
@@ -75,7 +75,7 @@ type PageContextBuiltIn<Page = any> = {
 
   /** @deprecated */
   pageExports: Record<string, unknown>
-} & PageContextUrlsPublic
+} & PageContextUrlComputedPropsPublic
 
 /** Client-side built-in `pageContext` properties set by vite-plugin-ssr (Client Routing).
  *

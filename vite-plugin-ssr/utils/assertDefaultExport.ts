@@ -1,8 +1,8 @@
 export { assertDefaultExportUnknown }
 export { assertDefaultExportObject }
 
-import { assert, assertUsage, assertWarning } from './assert'
-import { isObject } from './isObject'
+import { assert, assertUsage, assertWarning } from './assert.js'
+import { isObject } from './isObject.js'
 
 const IGNORE = [
   // vite-plugin-solid adds `export { $$registrations }`

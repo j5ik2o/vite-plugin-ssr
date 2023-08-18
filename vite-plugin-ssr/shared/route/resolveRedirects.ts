@@ -1,9 +1,9 @@
 export { resolveRedirects }
 export { resolveRouteStringRedirect }
 
-import { assertIsNotBrowser } from '../../utils/assertIsNotBrowser'
-import { assert, assertUsage } from '../utils'
-import { assertRouteString, resolveRouteString } from './resolveRouteString'
+import { assertIsNotBrowser } from '../../utils/assertIsNotBrowser.js'
+import { assert, assertUsage } from '../utils.js'
+import { assertRouteString, resolveRouteString } from './resolveRouteString.js'
 import pc from '@brillout/picocolors'
 assertIsNotBrowser() // Don't bloat the client
 

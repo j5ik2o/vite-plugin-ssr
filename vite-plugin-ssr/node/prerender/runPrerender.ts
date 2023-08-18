@@ -4,9 +4,9 @@ export { prerenderFromAutoFullBuild }
 export { prerenderForceExit }
 export type { PrerenderOptions }
 
-import '../runtime/page-files/setup'
+import '../runtime/page-files/setup.js'
 import path from 'path'
-import { route } from '../../shared/route'
+import { route } from '../../shared/route/index.js'
 import {
   assert,
   assertUsage,
@@ -17,40 +17,39 @@ import {
   isObjectWithKeys,
   isCallable,
   getOutDirs_prerender,
-  loadModuleAtRuntime,
   hasPropertyGetter,
   assertPosixPath,
   urlToFile,
   executeHook,
   isPlainObject,
   setNodeEnvToProduction
-} from './utils'
-import { pLimit, PLimit } from '../../utils/pLimit'
+} from './utils.js'
+import { pLimit, PLimit } from '../../utils/pLimit.js'
 import {
   prerenderPage,
   prerender404Page,
   getRenderContext,
   type RenderContext,
-  getPageContextInitEnhanced1,
-  PageContextInitEnhanced1
-} from '../runtime/renderPage/renderPageAlreadyRouted'
+  getPageContextInitEnhanced,
+  PageContextInitEnhanced
+} from '../runtime/renderPage/renderPageAlreadyRouted.js'
 import pc from '@brillout/picocolors'
 import { cpus } from 'os'
-import type { PageFile } from '../../shared/getPageFiles'
-import { getGlobalContext, initGlobalContext } from '../runtime/globalContext'
+import type { PageFile } from '../../shared/getPageFiles.js'
+import { getGlobalContext, initGlobalContext } from '../runtime/globalContext.js'
 import { resolveConfig } from 'vite'
-import { getConfigVps } from '../shared/getConfigVps'
+import { getConfigVps } from '../shared/getConfigVps.js'
 import type { InlineConfig } from 'vite'
-import { getPageFilesServerSide } from '../../shared/getPageFiles'
-import { getPageContextRequestUrl } from '../../shared/getPageContextRequestUrl'
-import { getUrlFromRouteString } from '../../shared/route/resolveRouteString'
-import { getCodeFilePath, getConfigValue } from '../../shared/page-configs/utils'
-import { loadPageCode } from '../../shared/page-configs/loadPageCode'
-import { isErrorPage } from '../../shared/error-page'
-import { addComputedUrlProps } from '../../shared/addComputedUrlProps'
-import { assertPathIsFilesystemAbsolute } from '../../utils/assertPathIsFilesystemAbsolute'
-import { isAbortError } from '../../shared/route/abort'
-import { loadPageFilesServerSide } from '../runtime/renderPage/loadPageFilesServerSide'
+import { getPageFilesServerSide } from '../../shared/getPageFiles.js'
+import { getPageContextRequestUrl } from '../../shared/getPageContextRequestUrl.js'
+import { getUrlFromRouteString } from '../../shared/route/resolveRouteString.js'
+import { getCodeFilePath, getConfigValue } from '../../shared/page-configs/utils.js'
+import { loadPageCode } from '../../shared/page-configs/loadPageCode.js'
+import { isErrorPage } from '../../shared/error-page.js'
+import { addUrlComputedProps, PageContextUrlComputedProps } from '../../shared/UrlComputedProps.js'
+import { assertPathIsFilesystemAbsolute } from '../../utils/assertPathIsFilesystemAbsolute.js'
+import { isAbortError } from '../../shared/route/abort.js'
+import { loadPageFilesServerSide } from '../runtime/renderPage/loadPageFilesServerSide.js'
 
 type HtmlFile = {
   urlOriginal: string
@@ -88,14 +87,14 @@ type PrerenderContext = {
   _noExtraDir: boolean
 }
 
-type PageContext = PageContextInitEnhanced1 & {
+type PageContext = PageContextInitEnhanced & {
   _urlRewrite: null
   _urlHandler: null
   _urlOriginalBeforeHook?: string
   _urlOriginalModifiedByHook?: TransformerHook
   _providedByHook: ProvidedByHook
   _pageContextAlreadyProvidedByOnPrerenderHook?: true
-}
+} & PageContextUrlComputedProps
 
 type PrerenderOptions = {
   /** Initial `pageContext` values */
@@ -108,7 +107,7 @@ type PrerenderOptions = {
    * We recommend to either omit this option or set it to `prerender({ viteConfig: { root }})`: the `vite.config.js` file living at `root` will be loaded.
    *
    * Alternatively you can:
-   *  - Set `prerender({ viteConfig: { configFile: require.resolve('./path/to/vite.config.js') }})`.
+   *  - Set `prerender({ viteConfig: { configFile: './path/to/vite.config.js' }})`.
    *  - Not load any `vite.config.js` file and, instead, use `prerender({ viteConfig: { configFile: false, ...myViteConfig }})` to programmatically define the entire Vite config.
    *
    * You can also load a `vite.config.js` file while overriding parts of the Vite config.
@@ -167,7 +166,7 @@ async function runPrerender(
 
   setNodeEnvToProduction()
 
-  disableReactStreaming()
+  await disableReactStreaming()
 
   const viteConfig = await resolveConfig(options.viteConfig || {}, 'vite-plugin-ssr pre-rendering' as any, 'production')
   assertLoadedConfig(viteConfig, options)
@@ -488,14 +487,12 @@ function createPageContext(urlOriginal: string, renderContext: RenderContext, pr
     ...prerenderContext.pageContextInit
   }
   {
-    const pageContextInitEnhanced1 = getPageContextInitEnhanced1(pageContextInit, renderContext)
-    objectAssign(pageContext, pageContextInitEnhanced1)
+    const pageContextInitEnhanced = getPageContextInitEnhanced(pageContextInit, renderContext, {
+      // We set `enumerable` to `false` to avoid computed URL properties from being iterated & copied in a onPrerenderStart() hook, e.g. /examples/i18n/
+      urlComputedPropsNonEnumerable: true
+    })
+    objectAssign(pageContext, pageContextInitEnhanced)
   }
-  addComputedUrlProps(
-    pageContext,
-    // We set `enumerable` to `false` to avoid computed URL properties from being iterated & copied in a onPrerenderStart() hook, e.g. /examples/i18n/
-    false
-  )
   return pageContext
 }
 
@@ -658,7 +655,8 @@ async function callOnPrerenderStartHook(
   )
   prerenderContext.pageContexts = result.prerenderContext.pageContexts as PageContext[]
 
-  prerenderContext.pageContexts.forEach((pageContext: PageContext & { url?: string }) => {
+  prerenderContext.pageContexts.forEach((pageContext: { urlOriginal?: string; url?: string }) => {
+    // TODO/v1-release: remove
     if (!hasPropertyGetter(pageContext, 'url') && pageContext.url) {
       assertWarning(
         false,
@@ -678,6 +676,9 @@ async function callOnPrerenderStartHook(
         hookName
       }
     }
+
+    // Restore as URL computed props are lost when user makes a pageContext copy
+    addUrlComputedProps(pageContext)
   })
 }
 
@@ -919,7 +920,7 @@ function write(
       })
       await onPagePrerender(prerenderPageContext)
     } else {
-      const { promises } = require('fs')
+      const { promises } = await import('fs')
       const { writeFile, mkdir } = promises
       await mkdir(path.posix.dirname(filePath), { recursive: true })
       await writeFile(filePath, fileContent)
@@ -1024,10 +1025,10 @@ function checkOutdatedOptions(options: {
   })
 }
 
-function disableReactStreaming() {
+async function disableReactStreaming() {
   let mod: any
   try {
-    mod = loadModuleAtRuntime('react-streaming/server')
+    mod = await import('react-streaming/server')
   } catch {
     return
   }

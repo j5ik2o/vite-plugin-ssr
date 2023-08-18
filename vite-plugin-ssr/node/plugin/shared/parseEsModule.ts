@@ -3,7 +3,7 @@ export { getImportStatements }
 export type { ImportStatement }
 
 import { init, parse } from 'es-module-lexer'
-import { assert } from '../utils'
+import { assert } from '../utils.js'
 
 type ParseResult = ReturnType<typeof parse>
 type ImportStatement = ParseResult[0][0]
@@ -12,7 +12,7 @@ async function getExportNames(src: string): Promise<{ exportNames: string[]; wil
   const parseResult = await parseEsModule(src)
   const [imports, exports] = parseResult
 
-  const exportNames = Array.from(exports)
+  const exportNames = exports.map((e) => e.n)
 
   // This seems to be the only way to detect re-exports
   //  - https://github.com/brillout/es-module-lexer_tests

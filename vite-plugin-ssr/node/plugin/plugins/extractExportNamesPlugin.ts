@@ -11,9 +11,9 @@ import {
   isDebugEnabled,
   getGlobalObject,
   assertUsage
-} from '../utils'
-import { getExportNames } from '../shared/parseEsModule'
-import { removeSourceMap } from '../shared/removeSourceMap'
+} from '../utils.js'
+import { getExportNames } from '../shared/parseEsModule.js'
+import { removeSourceMap } from '../shared/removeSourceMap.js'
 const extractExportNamesRE = /(\?|&)extractExportNames(?:&|$)/
 const debugNamespace = 'vps:extractExportNames'
 const debug = createDebugger(debugNamespace)

@@ -1,9 +1,9 @@
 export { getManifestEntry }
 
-import type { ViteManifest, ViteManifestEntry } from '../../../shared/ViteManifest'
-import { assert, slice, isNpmPackageImport } from '../../utils'
-import { assertClientEntryId } from './assertClientEntryId'
-import { isVirtualFileIdImportPageCode } from '../../../shared/virtual-files/virtualFileImportPageCode'
+import type { ViteManifest, ViteManifestEntry } from '../../../shared/ViteManifest.js'
+import { assert, slice, isNpmPackageImport } from '../../utils.js'
+import { assertClientEntryId } from './assertClientEntryId.js'
+import { isVirtualFileIdImportPageCode } from '../../../shared/virtual-files/virtualFileImportPageCode.js'
 
 function getManifestEntry(
   id: string,

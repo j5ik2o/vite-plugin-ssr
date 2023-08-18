@@ -8,12 +8,18 @@ export { getDependencyRootDir }
 //  - https://stackoverflow.com/questions/58442451/finding-the-root-directory-of-a-dependency-in-npm
 //  - https://stackoverflow.com/questions/10111163/how-can-i-get-the-path-of-a-module-i-have-loaded-via-require-that-is-not-mine/63441056#63441056
 
-import { assert, assertUsage } from './assert'
-import { isNpmPackageName } from './isNpmPackage'
-import { toPosixPath } from './filesystemPathHandling'
-import { isObject } from './isObject'
+import { assert, assertUsage } from './assert.js'
+import { isNpmPackageName } from './isNpmPackage.js'
+import { toPosixPath } from './filesystemPathHandling.js'
+import { isObject } from './isObject.js'
 import path from 'path'
 import fs from 'fs'
+import { assertIsNotProductionRuntime } from './assertIsNotProductionRuntime.js'
+import { createRequire } from 'module'
+// @ts-ignore Shimed by dist-cjs-fixup.js for CJS build.
+const importMetaUrl: string = import.meta.url
+const require_ = createRequire(importMetaUrl)
+assertIsNotProductionRuntime()
 
 function getDependencyPackageJson(npmPackageName: string, userAppRootDir: string): Record<string, unknown> {
   const packageJsonPath = getDependencyPackageJsonPath(npmPackageName, userAppRootDir)
@@ -48,7 +54,7 @@ function getDependencyPackageJsonPath(npmPackageName: string, userAppRootDir: st
 function resolvePackageJsonDirectly(npmPackageName: string, userAppRootDir: string): null | string {
   let packageJsonPath: string
   try {
-    packageJsonPath = require.resolve(`${npmPackageName}/package.json`, { paths: [userAppRootDir] })
+    packageJsonPath = require_.resolve(`${npmPackageName}/package.json`, { paths: [userAppRootDir] })
   } catch (err) {
     if (isUnexpectedError(err)) throw err
     return null
@@ -59,7 +65,7 @@ function resolvePackageJsonDirectly(npmPackageName: string, userAppRootDir: stri
 function resolvePackageJsonWithMainEntry(npmPackageName: string, userAppRootDir: string): null | string {
   let mainEntry: string
   try {
-    mainEntry = require.resolve(npmPackageName, { paths: [userAppRootDir] })
+    mainEntry = require_.resolve(npmPackageName, { paths: [userAppRootDir] })
   } catch (err) {
     if (isUnexpectedError(err)) throw err
     return null

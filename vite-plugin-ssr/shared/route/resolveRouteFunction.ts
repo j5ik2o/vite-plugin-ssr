@@ -2,18 +2,18 @@ export { resolveRouteFunction }
 export { assertRouteParams }
 export { assertSyncRouting }
 
-import { assertURLs, PageContextUrlsPrivate, PageContextUrlSource } from '../addComputedUrlProps'
-import { assert, assertUsage, assertWarning, hasProp, isPlainObject, isPromise, isStringRecord } from './utils'
+import { assertPageContextUrlComputedPropsPublic, PageContextUrlComputedProps } from '../UrlComputedProps.js'
+import { assert, assertUsage, assertWarning, hasProp, isPlainObject, isPromise, isStringRecord } from './utils.js'
 
 async function resolveRouteFunction(
   routeFunction: Function,
-  pageContext: PageContextUrlsPrivate & PageContextUrlSource,
+  pageContext: PageContextUrlComputedProps,
   routeDefinedAt: string
 ): Promise<null | {
   precedence: number | null
   routeParams: Record<string, string>
 }> {
-  assertURLs(pageContext)
+  assertPageContextUrlComputedPropsPublic(pageContext)
   let result: unknown = routeFunction(pageContext)
   assertSyncRouting(result, `The Route Function ${routeDefinedAt}`)
   result = await result

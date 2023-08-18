@@ -23,7 +23,7 @@ import {
   joinEnglish,
   lowerFirst,
   scriptFileExtensions
-} from '../../../utils'
+} from '../../../utils.js'
 import path from 'path'
 import type {
   ConfigElement,
@@ -31,10 +31,10 @@ import type {
   PageConfigGlobalData,
   ConfigElementSource,
   ConfigEnvPrivate
-} from '../../../../../shared/page-configs/PageConfig'
-import { configDefinitionsBuiltIn, type ConfigDefinition } from './getVikeConfig/configDefinitionsBuiltIn'
+} from '../../../../../shared/page-configs/PageConfig.js'
+import { configDefinitionsBuiltIn, type ConfigDefinition } from './getVikeConfig/configDefinitionsBuiltIn.js'
 import glob from 'fast-glob'
-import type { ExtensionResolved } from '../../../../../shared/ConfigVps'
+import type { ExtensionResolved } from '../../../../../shared/ConfigVps.js'
 import {
   getLocationId,
   getRouteFilesystem,
@@ -43,18 +43,22 @@ import {
   sortAfterInheritanceOrder,
   isGlobalLocation,
   applyFilesystemRoutingRootEffect
-} from './getVikeConfig/filesystemRouting'
-import { isTmpFile, transpileAndExecuteFile } from './transpileAndExecuteFile'
-import { ImportData, parseImportData } from './replaceImportStatements'
-import { isConfigInvalid, isConfigInvalid_set } from '../../../../runtime/renderPage/isConfigInvalid'
-import { getViteDevServer } from '../../../../runtime/globalContext'
-import { logConfigError, logConfigErrorRecover } from '../../../shared/loggerNotProd'
+} from './getVikeConfig/filesystemRouting.js'
+import { isTmpFile, transpileAndExecuteFile } from './transpileAndExecuteFile.js'
+import { ImportData, parseImportData } from './replaceImportStatements.js'
+import { isConfigInvalid, isConfigInvalid_set } from '../../../../runtime/renderPage/isConfigInvalid.js'
+import { getViteDevServer } from '../../../../runtime/globalContext.js'
+import { logConfigError, logConfigErrorRecover } from '../../../shared/loggerNotProd.js'
 import {
   removeSuperfluousViteLog_enable,
   removeSuperfluousViteLog_disable
-} from '../../../shared/loggerVite/removeSuperfluousViteLog'
-import { type FilePath, getFilePathToShowToUser } from './getFilePathToShowToUser'
-import type { ConfigNameBuiltIn } from '../../../../../shared/page-configs/Config'
+} from '../../../shared/loggerVite/removeSuperfluousViteLog.js'
+import { type FilePath, getFilePathToShowToUser } from './getFilePathToShowToUser.js'
+import type { ConfigNameBuiltIn } from '../../../../../shared/page-configs/Config.js'
+import { createRequire } from 'module'
+// @ts-ignore Shimed by dist-cjs-fixup.js for CJS build.
+const importMetaUrl: string = import.meta.url
+const require_ = createRequire(importMetaUrl)
 
 assertIsNotProductionRuntime()
 
@@ -1193,7 +1197,7 @@ function handleUserFileError(err: unknown, isDev: boolean) {
     //   plugin: 'vite-plugin-ssr:importUserCode',
     //   hook: 'load',
     //   watchFiles: [
-    //     '/home/rom/code/vite-plugin-ssr/vite-plugin-ssr/dist/cjs/node/importBuild.js',
+    //     '/home/rom/code/vite-plugin-ssr/vite-plugin-ssr/dist/esm/node/importBuild.js',
     //     '\x00virtual:vite-plugin-ssr:importUserCode:server'
     //   ]
     // }
@@ -1272,7 +1276,7 @@ function resolveImport(importData: ImportData, importerFilePath: FilePath): stri
   const clean = addFileExtensionsToRequireResolve()
   let importedFile: string | null
   try {
-    importedFile = require.resolve(importData.importPath, { paths: [plusConfigFilDirPathAbsolute] })
+    importedFile = require_.resolve(importData.importPath, { paths: [plusConfigFilDirPathAbsolute] })
   } catch {
     importedFile = null
   } finally {

@@ -1,7 +1,7 @@
 import { expect, describe, it } from 'vitest'
-import { getPagesAndRoutesInfo } from '../log404'
-import { stripAnsi } from '../../utils'
-import type { PageRoutes } from '../../../../shared/route'
+import { getPagesAndRoutesInfo } from '../log404/index.js'
+import { stripAnsi } from '../../utils.js'
+import type { PageRoutes } from '../../../../shared/route/index.js'
 
 describe('getPagesAndRoutesInfo()', () => {
   it('table layout - basic', () => {

@@ -1,14 +1,14 @@
-export type { PageContextBuiltIn } from '../shared/types'
-export type { PageContextBuiltInClientWithClientRouting } from '../shared/types'
-export type { PageContextBuiltInClientWithServerRouting } from '../shared/types'
-export type { InjectFilterEntry } from '../node/runtime/html/injectAssets/getHtmlTags'
-export type { Config, Meta, Effect } from '../shared/page-configs/Config'
-export type { ConfigEnvPublic as Env } from '../shared/page-configs/PageConfig'
-export type { ConfigEntries } from '../shared/getPageFiles/getExports'
+export type { PageContextBuiltIn } from '../shared/types.js'
+export type { PageContextBuiltInClientWithClientRouting } from '../shared/types.js'
+export type { PageContextBuiltInClientWithServerRouting } from '../shared/types.js'
+export type { InjectFilterEntry } from '../node/runtime/html/injectAssets/getHtmlTags.js'
+export type { Config, Meta, Effect } from '../shared/page-configs/Config.js'
+export type { ConfigEnvPublic as Env } from '../shared/page-configs/PageConfig.js'
+export type { ConfigEntries } from '../shared/getPageFiles/getExports.js'
 
 // TODO/v1-release: remove
 // Ancient VPS versions used to have `import type { PageContextBuiltInClient } from 'vite-plugin-ssr/types'`
-import { PageContextBuiltInClientWithServerRouting } from '../shared/types'
+import { PageContextBuiltInClientWithServerRouting } from '../shared/types.js'
 /** @deprecated Replace:
  *   `import { PageContextBuiltInClient } from 'vite-plugin-ssr/types'`
  * With:

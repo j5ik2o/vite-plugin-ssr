@@ -1,8 +1,8 @@
 export { assertPathIsFilesystemAbsolute }
 
 import path from 'path'
-import { assert } from './assert'
-import { assertPosixPath } from './filesystemPathHandling'
+import { assert } from './assert.js'
+import { assertPosixPath } from './filesystemPathHandling.js'
 
 /** Assert path is absolute from the filesystem root */
 function assertPathIsFilesystemAbsolute(p: string) {

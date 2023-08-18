@@ -1,3 +1,3 @@
 #!/usr/bin/env node
 
-require('../../dist/cjs/node/cli/bin.js')
+import '../../dist/esm/node/cli/bin.mjs'

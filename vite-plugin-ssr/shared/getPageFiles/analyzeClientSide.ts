@@ -1,9 +1,9 @@
 export { analyzeClientSide }
 
-import { getConfigValue } from '../page-configs/utils'
-import type { PageConfig } from '../page-configs/PageConfig'
-import type { PageFile } from './getPageFileObject'
-import { analyzePageClientSide } from './analyzePageClientSide'
+import { getConfigValue } from '../page-configs/utils.js'
+import type { PageConfig } from '../page-configs/PageConfig.js'
+import type { PageFile } from './getPageFileObject.js'
+import { analyzePageClientSide } from './analyzePageClientSide.js'
 
 function analyzeClientSide(
   pageConfig: PageConfig | null,

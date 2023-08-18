@@ -18,11 +18,11 @@ import {
   assertWarning,
   isObject,
   toPosixPath
-} from '../../../utils'
-import { isImportData, replaceImportStatements, type FileImport } from './replaceImportStatements'
-import { vikeConfigDependencies } from './getVikeConfig'
-import 'source-map-support/register'
-import { type FilePath, getFilePathToShowToUser } from './getFilePathToShowToUser'
+} from '../../../utils.js'
+import { isImportData, replaceImportStatements, type FileImport } from './replaceImportStatements.js'
+import { vikeConfigDependencies } from './getVikeConfig.js'
+import 'source-map-support/register.js'
+import { type FilePath, getFilePathToShowToUser } from './getFilePathToShowToUser.js'
 
 assertIsNotProductionRuntime()
 

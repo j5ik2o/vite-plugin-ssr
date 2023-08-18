@@ -1,2 +1,2 @@
 // eslint doesn't seem to support `package.json#exports`.
-module.exports = require('./dist/cjs/shared/RenderErrorPage.js')
+export * from './dist/shared/RenderErrorPage.mjs'

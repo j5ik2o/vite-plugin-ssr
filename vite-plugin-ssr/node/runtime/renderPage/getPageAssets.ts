@@ -5,7 +5,6 @@ export type { PageContextGetPageAssets }
 
 import {
   assert,
-  normalizePath,
   prependBase,
   assertPosixPath,
   toPosixPath,
@@ -13,18 +12,19 @@ import {
   unique,
   isNotNullish,
   pathJoin
-} from '../utils'
-import { retrieveAssetsDev } from './getPageAssets/retrieveAssetsDev'
-import { retrieveAssetsProd } from './getPageAssets/retrieveAssetsProd'
-import { inferMediaType, type MediaType } from './inferMediaType'
-import { getManifestEntry } from './getPageAssets/getManifestEntry'
+} from '../utils.js'
+import { retrieveAssetsDev } from './getPageAssets/retrieveAssetsDev.js'
+import { retrieveAssetsProd } from './getPageAssets/retrieveAssetsProd.js'
+import { inferMediaType, type MediaType } from './inferMediaType.js'
+import { getManifestEntry } from './getPageAssets/getManifestEntry.js'
 import type { ViteDevServer } from 'vite'
-import type { ClientDependency } from '../../../shared/getPageFiles/analyzePageClientSide/ClientDependency'
-import { sortPageAssetsForEarlyHintsHeader } from './getPageAssets/sortPageAssetsForEarlyHintsHeader'
-import type { ConfigVpsResolved } from '../../../shared/ConfigVps'
-import { getGlobalContext } from '../globalContext'
-import { assertClientEntryId } from './getPageAssets/assertClientEntryId'
-import type { ViteManifest } from '../../shared/ViteManifest'
+import type { ClientDependency } from '../../../shared/getPageFiles/analyzePageClientSide/ClientDependency.js'
+import { sortPageAssetsForEarlyHintsHeader } from './getPageAssets/sortPageAssetsForEarlyHintsHeader.js'
+import type { ConfigVpsResolved } from '../../../shared/ConfigVps.js'
+import { getGlobalContext } from '../globalContext.js'
+import { assertClientEntryId } from './getPageAssets/assertClientEntryId.js'
+import type { ViteManifest } from '../../shared/ViteManifest.js'
+import { import_ } from '@brillout/import'
 
 type PageAsset = {
   src: string
@@ -52,8 +52,8 @@ async function getPageAssets(
   let clientEntriesSrc: string[]
   if (isDev) {
     const { viteDevServer, configVps } = globalContext
-    clientEntriesSrc = clientEntries.map((clientEntry) =>
-      resolveClientEntriesDev(clientEntry, viteDevServer, configVps)
+    clientEntriesSrc = await Promise.all(
+      clientEntries.map((clientEntry) => resolveClientEntriesDev(clientEntry, viteDevServer, configVps))
     )
     assetUrls = await retrieveAssetsDev(clientDependencies, viteDevServer)
   } else {
@@ -102,7 +102,7 @@ async function getPageAssets(
 
   pageAssets = pageAssets.map((pageAsset) => {
     const baseServerAssets = pageContext._baseAssets || pageContext._baseServer
-    pageAsset.src = prependBase(normalizePath(pageAsset.src), baseServerAssets)
+    pageAsset.src = prependBase(toPosixPath(pageAsset.src), baseServerAssets)
     return pageAsset
   })
 
@@ -111,11 +111,11 @@ async function getPageAssets(
   return pageAssets
 }
 
-function resolveClientEntriesDev(
+async function resolveClientEntriesDev(
   clientEntry: string,
   viteDevServer: ViteDevServer,
   configVps: ConfigVpsResolved
-): string {
+): Promise<string> {
   assertClientEntryId(clientEntry)
 
   let root = viteDevServer.config.root
@@ -140,23 +140,30 @@ function resolveClientEntriesDev(
     filePath = pathJoin(root, clientEntry)
   } else if (clientEntry.startsWith('@@vite-plugin-ssr/')) {
     // VPS client entry
-    assert(clientEntry.endsWith('.js'))
-    const req = require // Prevent webpack from bundling client code
+
+    const { createRequire } = (await import_('module')).default as Awaited<typeof import('module')>
+    const { dirname } = (await import_('path')).default as Awaited<typeof import('path')>
+    const { fileURLToPath } = (await import_('url')).default as Awaited<typeof import('url')>
+    // @ts-ignore Shimed by dist-cjs-fixup.js for CJS build.
+    const importMetaUrl: string = import.meta.url
+    const require_ = createRequire(importMetaUrl)
+    const __dirname_ = dirname(fileURLToPath(importMetaUrl))
+
     // @ts-expect-error
     // Bun workaround https://github.com/brillout/vite-plugin-ssr/pull/1048
-    const res = typeof Bun !== 'undefined' ? (toPath: string) => Bun.resolveSync(toPath, __dirname) : req.resolve
+    const res = typeof Bun !== 'undefined' ? (toPath: string) => Bun.resolveSync(toPath, __dirname_) : require_.resolve
+
+    assert(clientEntry.endsWith('.js'))
     try {
-      // For Vitest
-      // [RELATIVE_PATH_FROM_DIST] Current file: node_modules/vite-plugin-ssr/node/runtime/html/injectAssets.js
+      // For Vitest (which doesn't resolve vite-plugin-ssr to its dist but to its source files)
+      // [RELATIVE_PATH_FROM_DIST] Current file: node_modules/vite-plugin-ssr/node/runtime/renderPage/getPageAssets.js
       filePath = toPosixPath(
         res(clientEntry.replace('@@vite-plugin-ssr/dist/esm/client/', '../../../client/').replace('.js', '.ts'))
       )
     } catch {
       // For users
-      // [RELATIVE_PATH_FROM_DIST] Current file: node_modules/vite-plugin-ssr/dist/cjs/node/runtime/html/injectAssets.js
-      filePath = toPosixPath(
-        res(clientEntry.replace('@@vite-plugin-ssr/dist/esm/client/', '../../../../../dist/esm/client/'))
-      )
+      // [RELATIVE_PATH_FROM_DIST] Current file: node_modules/vite-plugin-ssr/dist/esm/node/runtime/renderPage/getPageAssets.js
+      filePath = toPosixPath(res(clientEntry.replace('@@vite-plugin-ssr/dist/esm/client/', '../../../../../dist/esm/client/')))
     }
   } else if (isNpmPackageImport(clientEntry)) {
     const extensionPageFile = configVps.extensions

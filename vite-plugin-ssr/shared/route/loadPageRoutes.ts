@@ -4,14 +4,14 @@ export { findPageGuard }
 export type { PageRoutes }
 export type { RouteType }
 
-import type { PageFile } from '../getPageFiles'
-import { isErrorPageId } from '../error-page'
-import { assert, assertUsage, hasProp, slice } from './utils'
-import type { OnBeforeRouteHook } from './executeOnBeforeRouteHook'
-import { FilesystemRoot, deduceRouteStringFromFilesystemPath } from './deduceRouteStringFromFilesystemPath'
-import { isCallable } from '../utils'
-import type { PageConfig, PageConfigGlobal } from '../page-configs/PageConfig'
-import type { Hook } from '../getHook'
+import type { PageFile } from '../getPageFiles.js'
+import { isErrorPageId } from '../error-page.js'
+import { assert, assertUsage, hasProp, slice } from './utils.js'
+import type { OnBeforeRouteHook } from './executeOnBeforeRouteHook.js'
+import { FilesystemRoot, deduceRouteStringFromFilesystemPath } from './deduceRouteStringFromFilesystemPath.js'
+import { isCallable } from '../utils.js'
+import type { PageConfig, PageConfigGlobal } from '../page-configs/PageConfig.js'
+import type { Hook } from '../hooks/getHook.js'
 
 type PageRoute = {
   pageId: string
@@ -252,7 +252,7 @@ function findPageGuard(pageId: string, pageFilesAll: PageFile[]): null | PageGua
   if (!hookFn) return null
   const hookFilePath = filePath
   assertUsage(isCallable(hookFn), `guard() defined by ${hookFilePath} should be a function`)
-  return { hookFn, hookFilePath }
+  return { hookFn, hookName: 'guard', hookFilePath }
 }
 
 function dirname(filePath: string): string {

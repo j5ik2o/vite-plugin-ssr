@@ -3,24 +3,23 @@ export { createHttpResponsePageContextJson }
 export { createHttpResponseObjectRedirect }
 export type { HttpResponse }
 
-import type { GetPageAssets } from './getPageAssets'
-import { assert, assertWarning } from '../utils'
-import type { HtmlRender } from '../html/renderHtml'
-import type { PageConfig } from '../../../shared/page-configs/PageConfig'
-import { isErrorPage } from '../../../shared/error-page'
-import type { RenderHook } from './executeOnRenderHtmlHook'
-import type { StatusCodeAbort, StatusCodeError, UrlRedirect } from '../../../shared/route/abort'
-import { getHttpResponseBody, getHttpResponseBodyStreamHandlers, HttpResponseBody } from './getHttpResponseBody'
-import { getEarlyHints, type EarlyHint } from './getEarlyHints'
-import { logRuntimeInfo } from './loggerRuntime'
-import pc from '@brillout/picocolors'
+import type { GetPageAssets } from './getPageAssets.js'
+import { assert, assertWarning } from '../utils.js'
+import type { HtmlRender } from '../html/renderHtml.js'
+import type { PageConfig } from '../../../shared/page-configs/PageConfig.js'
+import { isErrorPage } from '../../../shared/error-page.js'
+import type { RenderHook } from './executeOnRenderHtmlHook.js'
+import type { StatusCodeAbort, StatusCodeError, UrlRedirect } from '../../../shared/route/abort.js'
+import { getHttpResponseBody, getHttpResponseBodyStreamHandlers, HttpResponseBody } from './getHttpResponseBody.js'
+import { getEarlyHints, type EarlyHint } from './getEarlyHints.js'
+import { assertNoInfiniteHttpRedirect } from './createHttpResponseObject/assertNoInfiniteHttpRedirect.js'
 
 type HttpResponse = {
   statusCode: 200 | 404 | 500 | StatusCodeAbort
   headers: [string, string][]
   earlyHints: EarlyHint[]
   // We don't use @deprecated to avoid TypeScript to remove the JSDoc
-  /** **Deprecated**: use `headers` instead, see https://vite-plugin-ssr.com/migration/0.4.23 */
+  /** **Deprecated**: use `headers` instead, see https://vite-plugin-ssr.com/migration/0.4.134 */
   contentType: 'application/json' | 'text/html;charset=utf-8'
 } & HttpResponseBody
 type StatusCode = HttpResponse['statusCode']
@@ -70,13 +69,13 @@ async function createHttpResponsePageContextJson(pageContextSerialized: string) 
 
 function createHttpResponseObjectRedirect(
   { url, statusCode }: UrlRedirect,
-  urlOriginal: string,
-  httpRequestId: number
+  // The URL pathname we assume the redirect to be logically based on
+  urlPathnameLogical: string
 ): HttpResponse {
+  assertNoInfiniteHttpRedirect(url, urlPathnameLogical)
   assert(url)
   assert(statusCode)
   assert(300 <= statusCode && statusCode <= 399)
-  logRuntimeInfo?.(`HTTP redirect ${pc.bold(urlOriginal)} -> ${pc.bold(url)} ${pc.gray(statusCode)}`, httpRequestId, 'info')
   const headers: ResponseHeaders = [['Location', url]]
   return getHttpResponse(
     statusCode,
@@ -106,7 +105,7 @@ function getHttpResponse(
     get contentType() {
       assertWarning(
         false,
-        'pageContext.httpResponse.contentType is deprecated and will be removed in the next major release. Use pageContext.httpResponse.headers instead, see https://vite-plugin-ssr.com/migration/0.4.23',
+        'pageContext.httpResponse.contentType is deprecated and will be removed in the next major release. Use pageContext.httpResponse.headers instead, see https://vite-plugin-ssr.com/migration/0.4.134',
         { onlyOnce: true }
       )
       return contentType

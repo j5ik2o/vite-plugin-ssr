@@ -3,15 +3,15 @@ export { injectHtmlTagsToStream }
 export type { PageContextInjectAssets }
 export type { PageContextPromise }
 
-import { assert, isCallable, isPromise } from '../utils'
-import type { PageAsset } from '../renderPage/getPageAssets'
-import { assertPageContextProvidedByUser } from '../../../shared/assertPageContextProvidedByUser'
-import { injectHtmlTags, createHtmlHeadIfMissing } from './injectAssets/injectHtmlTags'
-import type { HtmlPart } from './renderHtml'
-import { getHtmlTags, type PreloadFilter, type HtmlTag } from './injectAssets/getHtmlTags'
-import type { InjectToStream } from './stream/react-streaming'
-import type { PageConfig } from '../../../shared/page-configs/PageConfig'
-import type { PageContextSerialization } from './serializePageContextClientSide'
+import { assert, isCallable, isPromise } from '../utils.js'
+import type { PageAsset } from '../renderPage/getPageAssets.js'
+import { assertPageContextProvidedByUser } from '../../../shared/assertPageContextProvidedByUser.js'
+import { injectHtmlTags, createHtmlHeadIfMissing } from './injectAssets/injectHtmlTags.js'
+import type { HtmlPart } from './renderHtml.js'
+import { getHtmlTags, type PreloadFilter, type HtmlTag } from './injectAssets/getHtmlTags.js'
+import type { InjectToStream } from './stream/react-streaming.js'
+import type { PageConfig } from '../../../shared/page-configs/PageConfig.js'
+import type { PageContextSerialization } from './serializePageContextClientSide.js'
 
 type PageContextInjectAssets = {
   urlPathname: string

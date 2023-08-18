@@ -1,14 +1,14 @@
 export { renderPage }
 export { renderPage_addWrapper }
-export type { PageContextInitEnhanced2 }
 
 import {
   getRenderContext,
-  getPageContextInitEnhanced1,
+  getPageContextInitEnhanced,
   RenderContext,
-  renderPageAlreadyRouted
-} from './renderPage/renderPageAlreadyRouted'
-import { route } from '../../shared/route'
+  renderPageAlreadyRouted,
+  PageContextInitEnhanced
+} from './renderPage/renderPageAlreadyRouted.js'
+import { route } from '../../shared/route/index.js'
 import {
   assert,
   hasProp,
@@ -19,38 +19,40 @@ import {
   assertWarning,
   getGlobalObject,
   checkType,
-  assertUsage
-} from './utils'
-import { addComputedUrlProps } from '../../shared/addComputedUrlProps'
+  assertUsage,
+  normalizeUrlPathname,
+  removeBaseServer,
+  modifyUrlPathname,
+  prependBase
+} from './utils.js'
 import {
+  assertNoInfiniteAbortLoop,
   ErrorAbort,
   getPageContextFromAllRewrites,
   isAbortError,
   logAbortErrorHandled,
   PageContextFromRewrite
-} from '../../shared/route/abort'
-import { getGlobalContext, initGlobalContext } from './globalContext'
-import { handlePageContextRequestUrl } from './renderPage/handlePageContextRequestUrl'
+} from '../../shared/route/abort.js'
+import { getGlobalContext, initGlobalContext } from './globalContext.js'
+import { handlePageContextRequestUrl } from './renderPage/handlePageContextRequestUrl.js'
 import {
   createHttpResponseObjectRedirect,
   createHttpResponsePageContextJson,
   HttpResponse
-} from './renderPage/createHttpResponseObject'
-import { logRuntimeError, logRuntimeInfo } from './renderPage/loggerRuntime'
-import { isNewError } from './renderPage/isNewError'
-import { assertArguments } from './renderPage/assertArguments'
-import type { PageContextDebug } from './renderPage/debugPageFiles'
-import { log404 } from './renderPage/log404'
-import { isConfigInvalid } from './renderPage/isConfigInvalid'
+} from './renderPage/createHttpResponseObject.js'
+import { logRuntimeError, logRuntimeInfo } from './renderPage/loggerRuntime.js'
+import { isNewError } from './renderPage/isNewError.js'
+import { assertArguments } from './renderPage/assertArguments.js'
+import type { PageContextDebug } from './renderPage/debugPageFiles.js'
+import { log404 } from './renderPage/log404/index.js'
+import { isConfigInvalid } from './renderPage/isConfigInvalid.js'
 import pc from '@brillout/picocolors'
-import '../../utils/require-shim' // Ensure require shim for production
-import type { PageContextBuiltIn } from '../../types'
-import { serializePageContextAbort, serializePageContextClientSide } from './html/serializePageContextClientSide'
-import { getErrorPageId } from '../../shared/error-page'
-import { handleErrorWithoutErrorPage } from './renderPage/handleErrorWithoutErrorPage'
-import { loadPageFilesServerSide } from './renderPage/loadPageFilesServerSide'
-import { normalizeUrlPathname } from './renderPage/normalizeUrlPathname'
-import { resolveRedirects } from '../../shared/route/resolveRedirects'
+import type { PageContextBuiltIn } from '../../types/index.js'
+import { serializePageContextAbort, serializePageContextClientSide } from './html/serializePageContextClientSide.js'
+import { getErrorPageId } from '../../shared/error-page.js'
+import { handleErrorWithoutErrorPage } from './renderPage/handleErrorWithoutErrorPage.js'
+import { loadPageFilesServerSide } from './renderPage/loadPageFilesServerSide.js'
+import { resolveRedirects } from '../../shared/route/resolveRedirects.js'
 
 const globalObject = getGlobalObject('runtime/renderPage.ts', {
   httpRequestsCount: 0,
@@ -122,7 +124,7 @@ async function renderPageAndPrepare(
   }
 
   {
-    const pageContextHttpReponse = normalizePathname(pageContextInit, httpRequestId)
+    const pageContextHttpReponse = normalizePathname(pageContextInit)
     if (pageContextHttpReponse) return pageContextHttpReponse
   }
 
@@ -146,7 +148,7 @@ async function renderPageAndPrepare(
   }
 
   {
-    const pageContextHttpReponse = getPermanentRedirect(pageContextInit, httpRequestId)
+    const pageContextHttpReponse = getPermanentRedirect(pageContextInit)
     if (pageContextHttpReponse) return pageContextHttpReponse
   }
 
@@ -159,6 +161,12 @@ async function renderPageAlreadyPrepared(
   renderContext: RenderContext,
   pageContextsFromRewrite: PageContextFromRewrite[]
 ): Promise<PageContextAfterRender> {
+  assertNoInfiniteAbortLoop(
+    pageContextsFromRewrite.length,
+    // There doesn't seem to be a way to count the number of HTTP redirects (vite-plugin-ssr don't have access to the HTTP request headers/cookies)
+    // https://stackoverflow.com/questions/9683007/detect-infinite-http-redirect-loop-on-server-side
+    0
+  )
   let pageContextNominalPageSuccess: undefined | Awaited<ReturnType<typeof renderPageNominal>>
   let pageContextNominalPageInit = {}
   {
@@ -166,13 +174,13 @@ async function renderPageAlreadyPrepared(
     objectAssign(pageContextNominalPageInit, pageContextFromAllRewrites)
   }
   {
-    const pageContextInitEnhanced2 = getPageContextInitEnhanced2(
+    const pageContextInitEnhanced = getPageContextInitEnhancedSSR(
       pageContextInit,
       renderContext,
       pageContextNominalPageInit._urlRewrite,
       httpRequestId
     )
-    objectAssign(pageContextNominalPageInit, pageContextInitEnhanced2)
+    objectAssign(pageContextNominalPageInit, pageContextInitEnhanced)
   }
   let errNominalPage: unknown
   {
@@ -293,8 +301,9 @@ function logHttpResponse(urlToShowToUser: string, httpRequestId: number, pageCon
   const isSuccess = statusCode !== null && statusCode >= 200 && statusCode <= 399
   const isNominal = isSuccess || statusCode === 404
   const color = (s: number | string) => pc.bold(isSuccess ? pc.green(s) : pc.red(s))
+  const type = statusCode && 300 <= statusCode && statusCode <= 399 ? 'redirect' : 'response'
   logRuntimeInfo?.(
-    `HTTP response ${urlToShowToUser} ${color(statusCode ?? 'ERR')}`,
+    `HTTP ${type} ${urlToShowToUser} ${color(statusCode ?? 'ERR')}`,
     httpRequestId,
     isNominal ? 'info' : 'error'
   )
@@ -319,9 +328,9 @@ function getPageContextHttpResponseNull(pageContextInit: Record<string, unknown>
   return pageContextHttpReponseNull
 }
 
-async function renderPageNominal(pageContext: { _urlRewrite: null | string } & PageContextInitEnhanced2) {
-  addComputedUrlProps(pageContext)
-
+async function renderPageNominal(
+  pageContext: { _urlRewrite: null | string; _httpRequestId: number } & PageContextInitEnhanced
+) {
   objectAssign(pageContext, { errorWhileRendering: null })
 
   // Check Base URL
@@ -365,17 +374,15 @@ async function getPageContextErrorPageInit(
   renderContext: RenderContext,
   httpRequestId: number
 ) {
-  const pageContextInitEnhanced2 = getPageContextInitEnhanced2(pageContextInit, renderContext, null, httpRequestId)
+  const pageContextInitEnhanced = getPageContextInitEnhancedSSR(pageContextInit, renderContext, null, httpRequestId)
 
   assert(errNominalPage)
   const pageContext = {
-    ...pageContextInitEnhanced2,
+    ...pageContextInitEnhanced,
     is404: false,
-    _urlRewrite: null,
     errorWhileRendering: errNominalPage as Error,
     routeParams: {} as Record<string, string>
   }
-  addComputedUrlProps(pageContext)
 
   objectAssign(pageContext, {
     _routeMatches: (pageContextNominalPagePartial as PageContextDebug)._routeMatches || 'ROUTE_ERROR'
@@ -385,26 +392,22 @@ async function getPageContextErrorPageInit(
   return pageContext
 }
 
-type PageContextInitEnhanced2 = ReturnType<typeof getPageContextInitEnhanced2>
-function getPageContextInitEnhanced2(
+function getPageContextInitEnhancedSSR(
   pageContextInit: { urlOriginal: string },
   renderContext: RenderContext,
   urlRewrite: null | string,
   httpRequestId: number
 ) {
-  const pageContextInitEnhanced2 = {
-    ...pageContextInit,
-    _httpRequestId: httpRequestId
-  }
-  {
-    const pageContextInitEnhanced1 = getPageContextInitEnhanced1(pageContextInit, renderContext)
-    objectAssign(pageContextInitEnhanced2, pageContextInitEnhanced1)
-  }
-  {
-    const pageContextAddendum = handleUrl(pageContextInit.urlOriginal, urlRewrite)
-    objectAssign(pageContextInitEnhanced2, pageContextAddendum)
-  }
-  return pageContextInitEnhanced2
+  const { isClientSideNavigation, _urlHandler } = handleUrl(pageContextInit.urlOriginal, urlRewrite)
+  const pageContextInitEnhanced = getPageContextInitEnhanced(pageContextInit, renderContext, {
+    ssr: {
+      urlRewrite,
+      urlHandler: _urlHandler,
+      isClientSideNavigation
+    }
+  })
+  objectAssign(pageContextInitEnhanced, { _httpRequestId: httpRequestId })
+  return pageContextInitEnhanced
 }
 
 function handleUrl(
@@ -448,28 +451,31 @@ function skipRequest(urlOriginal: string): boolean {
     isViteClientRequest
   )
 }
-function normalizePathname(pageContextInit: { urlOriginal: string }, httpRequestId: number) {
+function normalizePathname(pageContextInit: { urlOriginal: string }) {
   const { urlOriginal } = pageContextInit
   const urlNormalized = normalizeUrlPathname(urlOriginal)
   if (!urlNormalized) return null
   const httpResponse = createHttpResponseObjectRedirect(
     { url: urlNormalized, statusCode: 301 },
-    pageContextInit.urlOriginal,
-    httpRequestId
+    pageContextInit.urlOriginal
   )
   const pageContextHttpResponse = { ...pageContextInit, httpResponse }
   return pageContextHttpResponse
 }
 
-function getPermanentRedirect(pageContextInit: { urlOriginal: string }, httpRequestId: number) {
-  const { redirects } = getGlobalContext()
-  const urlTarget = resolveRedirects(redirects, pageContextInit.urlOriginal)
-  if (!urlTarget) return null
-  const httpResponse = createHttpResponseObjectRedirect(
-    { url: urlTarget, statusCode: 301 },
-    pageContextInit.urlOriginal,
-    httpRequestId
-  )
+function getPermanentRedirect(pageContextInit: { urlOriginal: string }) {
+  const { redirects, baseServer } = getGlobalContext()
+  const urlWithoutBase = removeBaseServer(pageContextInit.urlOriginal, baseServer)
+  let urlPathname: undefined | string
+  let urlRedirect = modifyUrlPathname(urlWithoutBase, (urlPathname_) => {
+    urlPathname = urlPathname_
+    return resolveRedirects(redirects, urlPathname)
+  })
+  assert(urlPathname)
+  if (urlRedirect === urlWithoutBase) return null
+  urlRedirect = prependBase(urlRedirect, baseServer)
+  assert(urlRedirect !== pageContextInit.urlOriginal)
+  const httpResponse = createHttpResponseObjectRedirect({ url: urlRedirect, statusCode: 301 }, urlPathname)
   const pageContextHttpResponse = { ...pageContextInit, httpResponse }
   return pageContextHttpResponse
 }
@@ -480,6 +486,7 @@ async function handleAbortError(
   pageContextInit: { urlOriginal: string },
   pageContextNominalPageInit: {
     urlOriginal: string
+    urlPathname: string
     _urlRewrite: null | string
     isClientSideNavigation: boolean
   },
@@ -537,8 +544,7 @@ async function handleAbortError(
     }
     const httpResponse = createHttpResponseObjectRedirect(
       pageContextAbort._urlRedirect,
-      pageContextInit.urlOriginal,
-      httpRequestId
+      pageContextNominalPageInit.urlPathname
     )
     objectAssign(pageContextReturn, { httpResponse })
     return { pageContextReturn }

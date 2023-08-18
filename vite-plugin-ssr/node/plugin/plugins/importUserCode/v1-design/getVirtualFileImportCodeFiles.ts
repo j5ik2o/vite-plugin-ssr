@@ -1,18 +1,18 @@
 export { getVirtualFileImportCodeFiles }
 
-import { assert, assertPosixPath } from '../../../utils'
-import type { PageConfigData } from '../../../../../shared/page-configs/PageConfig'
-import { generateEagerImport } from '../generateEagerImport'
+import { assert, assertPosixPath } from '../../../utils.js'
+import type { PageConfigData } from '../../../../../shared/page-configs/PageConfig.js'
+import { generateEagerImport } from '../generateEagerImport.js'
 import {
   getVirtualFileIdImportPageCode,
   isVirtualFileIdImportPageCode
-} from '../../../../shared/virtual-files/virtualFileImportPageCode'
-import { getVikeConfig } from './getVikeConfig'
-import { extractAssetsAddQuery } from '../../../../shared/extractAssetsQuery'
-import { debug } from './debug'
-import type { ConfigVpsResolved } from '../../../../../shared/ConfigVps'
+} from '../../../../shared/virtual-files/virtualFileImportPageCode.js'
+import { getVikeConfig } from './getVikeConfig.js'
+import { extractAssetsAddQuery } from '../../../../shared/extractAssetsQuery.js'
+import { debug } from './debug.js'
+import type { ConfigVpsResolved } from '../../../../../shared/ConfigVps.js'
 import path from 'path'
-import { getConfigValue } from '../../../../../shared/page-configs/utils'
+import { getConfigValue } from '../../../../../shared/page-configs/utils.js'
 
 async function getVirtualFileImportCodeFiles(
   id: string,

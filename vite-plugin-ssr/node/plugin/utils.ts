@@ -1,26 +1,25 @@
 // Utils needed by vite-plugin-ssr's Vite plugin.
 
-// Ensure we don't bloat the server runtime with plugin utils
-import { assertIsNotProductionRuntime } from '../../utils/assertIsNotProductionRuntime'
-assertIsNotProductionRuntime()
+// We assume all runtime entries will load this utils.ts file
+import { onLoad } from './onLoad.js'
+onLoad()
 
 // We tolerate the fact that we load all of the runtime utils even though some of it isn't needed
-export * from '../runtime/utils'
+export * from '../runtime/utils.js'
 
 // Utils only needed by `plugin/*`
-export * from '../../utils/viteIsSSR'
-export * from '../../utils/getFilePathAbsolute'
-export * from '../../utils/getDependencyPackageJson'
-export * from '../../utils/addFileExtensionsToRequireResolve'
-export * from '../../utils/assertDefaultExport'
-export * from '../../utils/arrayIncludes'
-export * from '../../utils/isDev'
-export * from '../../utils/objectKeys'
-export * from '../../utils/getMostSimilar'
-export * from '../../utils/getRandomId'
-export * from '../../utils/joinEnglish'
-export * from '../../utils/escapeRegex'
-export * from '../../utils/stripAnsi'
-export * from '../../utils/trimWithAnsi'
-export * from '../../utils/removeEmptyLines'
-export * from '../../utils/require-shim'
+export * from '../../utils/viteIsSSR.js'
+export * from '../../utils/getFilePathAbsolute.js'
+export * from '../../utils/getDependencyPackageJson.js'
+export * from '../../utils/addFileExtensionsToRequireResolve.js'
+export * from '../../utils/assertDefaultExport.js'
+export * from '../../utils/arrayIncludes.js'
+export * from '../../utils/isDev.js'
+export * from '../../utils/objectKeys.js'
+export * from '../../utils/getMostSimilar.js'
+export * from '../../utils/getRandomId.js'
+export * from '../../utils/joinEnglish.js'
+export * from '../../utils/escapeRegex.js'
+export * from '../../utils/stripAnsi.js'
+export * from '../../utils/trimWithAnsi.js'
+export * from '../../utils/removeEmptyLines.js'

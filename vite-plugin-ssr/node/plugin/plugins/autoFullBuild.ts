@@ -2,11 +2,11 @@ export { autoFullBuild }
 
 import { build } from 'vite'
 import type { InlineConfig, Plugin, ResolvedConfig } from 'vite'
-import { assertWarning } from '../utils'
-import { prerenderFromAutoFullBuild, prerenderForceExit } from '../../prerender/runPrerender'
-import { getConfigVps } from '../../shared/getConfigVps'
-import type { ConfigVpsResolved } from '../../../shared/ConfigVps'
-import { isViteCliCall, getViteConfigFromCli } from '../shared/isViteCliCall'
+import { assertWarning } from '../utils.js'
+import { prerenderFromAutoFullBuild, prerenderForceExit } from '../../prerender/runPrerender.js'
+import { getConfigVps } from '../../shared/getConfigVps.js'
+import type { ConfigVpsResolved } from '../../../shared/ConfigVps.js'
+import { isViteCliCall, getViteConfigFromCli } from '../shared/isViteCliCall.js'
 
 let forceExit = false
 

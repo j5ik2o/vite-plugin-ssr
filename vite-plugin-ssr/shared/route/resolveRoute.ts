@@ -1,7 +1,7 @@
 export { resolveRoute }
 
-import { assertUsage } from './utils'
-import { resolveRouteString } from './resolveRouteString'
+import { assertUsage } from './utils.js'
+import { resolveRouteString } from './resolveRouteString.js'
 
 function resolveRoute(
   routeString: string,

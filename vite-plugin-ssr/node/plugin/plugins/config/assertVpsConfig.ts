@@ -1,7 +1,7 @@
 export { assertVpsConfig }
 
-import { assert, assertUsage, hasProp, isObject } from '../../utils'
-import type { ConfigVpsUserProvided } from '../../../../shared/ConfigVps'
+import { assert, assertUsage, hasProp, isObject } from '../../utils.js'
+import type { ConfigVpsUserProvided } from '../../../../shared/ConfigVps.js'
 
 type WrongUsage = { prop: string; errMsg: `should be a${string}` }
 

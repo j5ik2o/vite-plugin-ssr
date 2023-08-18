@@ -1,15 +1,14 @@
 export { resolveVpsConfig }
 
 import type { Plugin, ResolvedConfig } from 'vite'
-import type { ConfigVpsUserProvided, ConfigVpsResolved } from '../../../../shared/ConfigVps'
-import { assertVpsConfig } from './assertVpsConfig'
-import { isDev2 } from '../../utils'
-import { findConfigVpsFromStemPackages } from './findConfigVpsFromStemPackages'
-import { pickFirst } from './pickFirst'
-import { resolveExtensions } from './resolveExtensions'
-import { resolveBase } from './resolveBase'
-import { getVikeConfig } from '../importUserCode/v1-design/getVikeConfig'
-import '../../../../utils/require-shim' // Ensure require shim for dev
+import type { ConfigVpsUserProvided, ConfigVpsResolved } from '../../../../shared/ConfigVps.js'
+import { assertVpsConfig } from './assertVpsConfig.js'
+import { isDev2 } from '../../utils.js'
+import { findConfigVpsFromStemPackages } from './findConfigVpsFromStemPackages.js'
+import { pickFirst } from './pickFirst.js'
+import { resolveExtensions } from './resolveExtensions.js'
+import { resolveBase } from './resolveBase.js'
+import { getVikeConfig } from '../importUserCode/v1-design/getVikeConfig.js'
 
 function resolveVpsConfig(vpsConfig: unknown): Plugin {
   return {

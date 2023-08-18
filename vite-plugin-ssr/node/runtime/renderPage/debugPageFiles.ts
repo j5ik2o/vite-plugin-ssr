@@ -1,12 +1,12 @@
 export { debugPageFiles }
 export type { PageContextDebug }
 
-import { RouteMatches } from '../../../shared/route'
-import type { ClientDependency } from '../../../shared/getPageFiles/analyzePageClientSide/ClientDependency'
-import type { PageFile } from '../../../shared/getPageFiles'
+import { RouteMatches } from '../../../shared/route/index.js'
+import type { ClientDependency } from '../../../shared/getPageFiles/analyzePageClientSide/ClientDependency.js'
+import type { PageFile } from '../../../shared/getPageFiles.js'
 import pc from '@brillout/picocolors'
-import { assert, makeFirst, createDebugger } from '../utils'
-import type { PageConfig } from '../../../shared/page-configs/PageConfig'
+import { assert, makeFirst, createDebugger } from '../utils.js'
+import type { PageConfig } from '../../../shared/page-configs/PageConfig.js'
 
 type PageContextDebug = {
   _routeMatches: 'ROUTE_ERROR' | RouteMatches

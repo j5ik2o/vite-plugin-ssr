@@ -2,8 +2,8 @@ export { inferAssetTag }
 export { inferPreloadTag }
 export { inferEarlyHintLink }
 
-import { assert } from '../../utils'
-import type { PageAsset } from '../../renderPage/getPageAssets'
+import { assert } from '../../utils.js'
+import type { PageAsset } from '../../renderPage/getPageAssets.js'
 
 function inferPreloadTag(pageAsset: PageAsset): string {
   const { src, assetType, mediaType } = pageAsset

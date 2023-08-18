@@ -1,8 +1,8 @@
 export { findConfigVpsFromStemPackages }
 
-import type { ConfigVpsUserProvided } from '../../../../shared/ConfigVps'
-import { assert, createDebugger, isObject } from '../../utils'
-import { getStemPackages } from './stemUtils'
+import type { ConfigVpsUserProvided } from '../../../../shared/ConfigVps.js'
+import { assert, createDebugger, isObject } from '../../utils.js'
+import { getStemPackages } from './stemUtils.js'
 
 const debug = createDebugger('vps:stem')
 

@@ -3,10 +3,10 @@ export { getOutDirs_prerender }
 export { resolveOutDir }
 
 import type { UserConfig, ResolvedConfig } from 'vite'
-import { viteIsSSR } from './viteIsSSR'
-import { assert, assertUsage } from './assert'
-import { pathJoin } from './path-shim'
-import { assertPosixPath, toPosixPath } from './filesystemPathHandling'
+import { viteIsSSR } from './viteIsSSR.js'
+import { assert, assertUsage } from './assert.js'
+import { pathJoin } from './path-shim.js'
+import { assertPosixPath, toPosixPath } from './filesystemPathHandling.js'
 
 type OutDirs = {
   /** Absolute path to `outDir` */

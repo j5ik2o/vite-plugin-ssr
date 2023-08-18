@@ -3,16 +3,16 @@ export type { HtmlTag }
 export type { PreloadFilter }
 export type { InjectFilterEntry }
 
-import { assert, assertWarning, assertUsage, isObject, freezePartial } from '../../utils'
-import { type PageContextSerialization, serializePageContextClientSide } from '../serializePageContextClientSide'
-import { sanitizeJson } from './sanitizeJson'
-import { inferAssetTag, inferPreloadTag } from './inferHtmlTags'
-import { getViteDevScripts } from './getViteDevScripts'
-import { mergeScriptTags } from './mergeScriptTags'
-import type { PageContextInjectAssets } from '../injectAssets'
-import type { InjectToStream } from '../stream/react-streaming'
-import type { PageAsset } from '../../renderPage/getPageAssets'
-import { getGlobalContext } from '../../globalContext'
+import { assert, assertWarning, assertUsage, isObject, freezePartial } from '../../utils.js'
+import { type PageContextSerialization, serializePageContextClientSide } from '../serializePageContextClientSide.js'
+import { sanitizeJson } from './sanitizeJson.js'
+import { inferAssetTag, inferPreloadTag } from './inferHtmlTags.js'
+import { getViteDevScripts } from './getViteDevScripts.js'
+import { mergeScriptTags } from './mergeScriptTags.js'
+import type { PageContextInjectAssets } from '../injectAssets.js'
+import type { InjectToStream } from '../stream/react-streaming.js'
+import type { PageAsset } from '../../renderPage/getPageAssets.js'
+import { getGlobalContext } from '../../globalContext.js'
 
 type PreloadFilter = null | ((assets: InjectFilterEntry[]) => InjectFilterEntry[])
 type PreloadFilterInject = false | 'HTML_BEGIN' | 'HTML_END'

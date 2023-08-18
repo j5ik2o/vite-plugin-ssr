@@ -1,6 +1,6 @@
-import { resolveRouteString } from './resolveRouteString'
-import { resolveRouteStringRedirect } from './resolveRedirects'
-import { stripAnsi } from '../../utils/stripAnsi'
+import { resolveRouteString } from './resolveRouteString.js'
+import { resolveRouteStringRedirect } from './resolveRedirects.js'
+import { stripAnsi } from '../../utils/stripAnsi.js'
 import { expect, describe, it } from 'vitest'
 
 const r: typeof resolveRouteString = (a, b) => resolveRouteString(a, b)
@@ -125,7 +125,7 @@ function expectErr(fn: Function, errMsg: string) {
     try {
       fn()
     } catch (err_) {
-      err = err_
+      err = err_ as Error
     }
     expect(err).toBeTruthy()
     expect(stripAnsi(err!.message)).toBe(errMsg)

@@ -1,8 +1,8 @@
 export { getVirtualFileImportPageConfigs }
 
-import { getVikeConfig } from './getVikeConfig'
-import type { ConfigVpsResolved } from '../../../../../shared/ConfigVps'
-import { serializePageConfigs } from './serializePageConfigs'
+import { getVikeConfig } from './getVikeConfig.js'
+import type { ConfigVpsResolved } from '../../../../../shared/ConfigVps.js'
+import { serializePageConfigs } from './serializePageConfigs.js'
 
 async function getVirtualFileImportPageConfigs(
   userRootDir: string,

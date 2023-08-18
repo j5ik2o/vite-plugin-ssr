@@ -2,9 +2,9 @@ export { getConfigValue }
 export { getCodeFilePath }
 export { getPageConfig }
 
-import { assert, assertUsage } from '../utils'
-import type { PageConfig, PageConfigData } from './PageConfig'
-import type { ConfigNameBuiltIn, ConfigNamePrivate } from './Config'
+import { assert, assertUsage } from '../utils.js'
+import type { PageConfig, PageConfigData } from './PageConfig.js'
+import type { ConfigNameBuiltIn, ConfigNamePrivate } from './Config.js'
 
 type ConfigName = ConfigNameBuiltIn | ConfigNamePrivate
 

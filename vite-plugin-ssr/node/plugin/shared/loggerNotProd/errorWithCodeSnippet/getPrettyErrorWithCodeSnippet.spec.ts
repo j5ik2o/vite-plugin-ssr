@@ -1,18 +1,18 @@
-import { getPrettyErrorWithCodeSnippet, isErrorWithCodeSnippet } from '../errorWithCodeSnippet'
+import { getPrettyErrorWithCodeSnippet, isErrorWithCodeSnippet } from '../errorWithCodeSnippet.js'
 
 import { expect, describe, it } from 'vitest'
-import { stripAnsi } from '../../../utils'
+import { stripAnsi } from '../../../utils.js'
 
-import { errBabelSolid } from './fixture-errors/errBabelSolid'
-import { errBabelReact } from './fixture-errors/errBabelReact'
-import { errEsbuild } from './fixture-errors/errEsbuild'
-import { errVueCss } from './fixture-errors/errVueCss'
-import { errVueJavascript } from './fixture-errors/errVueJavascript'
-import { errVueHtml } from './fixture-errors/errVueHtml'
-import { errSwc } from './fixture-errors/errSwc'
-import { errSwcBig } from './fixture-errors/errSwcBig'
-import { errMdx } from './fixture-errors/errMdx'
-import { errPostcss } from './fixture-errors/errPostcss'
+import { errBabelSolid } from './fixture-errors/errBabelSolid.js'
+import { errBabelReact } from './fixture-errors/errBabelReact.js'
+import { errEsbuild } from './fixture-errors/errEsbuild.js'
+import { errVueCss } from './fixture-errors/errVueCss.js'
+import { errVueJavascript } from './fixture-errors/errVueJavascript.js'
+import { errVueHtml } from './fixture-errors/errVueHtml.js'
+import { errSwc } from './fixture-errors/errSwc.js'
+import { errSwcBig } from './fixture-errors/errSwcBig.js'
+import { errMdx } from './fixture-errors/errMdx.js'
+import { errPostcss } from './fixture-errors/errPostcss.js'
 
 // To generate new test cases:
 // Uncomment the console.log() statements in ./errorWithCodeSnippet.ts
@@ -100,7 +100,7 @@ describe('getPrettyErrorWithCodeSnippet() - success', () => {
       13 |  <script lang=\\"ts\\" setup>
       14 |  imeport Counter from '../../components/Counter.vue'
          |         ^
-      15 |  import { navigate } from 'vite-plugin-ssr/client/router'
+      15 |  import { navigate } from 'vite-plugin-ssr/client/router.js'
       16 |"
     `)
   })

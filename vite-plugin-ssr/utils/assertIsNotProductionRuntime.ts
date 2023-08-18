@@ -6,10 +6,10 @@ export { markEnvAsPreview }
 export { markEnvAsVite }
 export { assertEnv }
 
-import { assert } from './assert'
-import { assertIsNotBrowser } from './assertIsNotBrowser'
-import { getGlobalObject } from './getGlobalObject'
-import { isVitest } from './isVitest'
+import { assert } from './assert.js'
+import { assertIsNotBrowser } from './assertIsNotBrowser.js'
+import { getGlobalObject } from './getGlobalObject.js'
+import { isVitest } from './isVitest.js'
 
 assertIsNotBrowser()
 

@@ -2,31 +2,31 @@ export { route }
 export type { PageRoutes, PageContextForRoute, RouteMatches }
 
 // Ensure we don't bloat runtime of Server Routing
-import { assertClientRouting } from '../../utils/assertRoutingType'
-import { isBrowser } from '../../utils/isBrowser'
+import { assertClientRouting } from '../../utils/assertRoutingType.js'
+import { isBrowser } from '../../utils/isBrowser.js'
 if (isBrowser()) {
   assertClientRouting()
 }
 
-import type { PageFile } from '../getPageFiles'
-import { assert, assertUsage, hasProp, isPlainObject, objectAssign } from './utils'
-import { addComputedUrlProps, PageContextUrlSource } from '../addComputedUrlProps'
-import { resolvePrecendence } from './resolvePrecedence'
-import { resolveRouteString } from './resolveRouteString'
-import { resolveRouteFunction } from './resolveRouteFunction'
-import { executeOnBeforeRouteHook, type OnBeforeRouteHook } from './executeOnBeforeRouteHook'
-import type { PageRoutes, RouteType } from './loadPageRoutes'
-import { debug } from './debug'
-import type { PageConfig, PageConfigGlobal } from '../page-configs/PageConfig'
+import type { PageFile } from '../getPageFiles.js'
+import { assert, assertUsage, hasProp, isPlainObject, objectAssign } from './utils.js'
+import { addUrlComputedProps, PageContextUrlComputedProps, PageContextUrlSources } from '../UrlComputedProps.js'
+import { resolvePrecendence } from './resolvePrecedence.js'
+import { resolveRouteString } from './resolveRouteString.js'
+import { resolveRouteFunction } from './resolveRouteFunction.js'
+import { executeOnBeforeRouteHook, type OnBeforeRouteHook } from './executeOnBeforeRouteHook.js'
+import type { PageRoutes, RouteType } from './loadPageRoutes.js'
+import { debug } from './debug.js'
+import type { PageConfig, PageConfigGlobal } from '../page-configs/PageConfig.js'
 
-type PageContextForRoute = PageContextUrlSource & {
+type PageContextForRoute = PageContextUrlComputedProps & {
   _pageFilesAll: PageFile[]
   _pageConfigs: PageConfig[]
   _allPageIds: string[]
   _pageConfigGlobal: PageConfigGlobal
   _pageRoutes: PageRoutes
   _onBeforeRouteHook: OnBeforeRouteHook | null
-}
+} & PageContextUrlSources
 type RouteMatch = {
   pageId: string
   routeString?: string
@@ -44,7 +44,7 @@ async function route(pageContext: PageContextForRoute): Promise<{
     _routeMatches: RouteMatches
   } & Record<string, unknown>
 }> {
-  addComputedUrlProps(pageContext)
+  addUrlComputedProps(pageContext)
 
   debug('Pages routes:', pageContext._pageRoutes)
 

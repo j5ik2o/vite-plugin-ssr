@@ -2,17 +2,17 @@ export { loadPageFilesServerSide }
 export type { PageFiles }
 export type { PageContext_loadPageFilesServerSide }
 
-import { type PageFile, getExportUnion, getPageFilesServerSide, getExports } from '../../../shared/getPageFiles'
-import { analyzePageClientSideInit } from '../../../shared/getPageFiles/analyzePageClientSide'
-import { assertWarning, objectAssign, PromiseType } from '../utils'
-import { getPageAssets, PageContextGetPageAssets, type PageAsset } from './getPageAssets'
-import { debugPageFiles, type PageContextDebug } from './debugPageFiles'
-import type { PageConfig } from '../../../shared/page-configs/PageConfig'
-import { findPageConfig } from '../../../shared/page-configs/findPageConfig'
-import { analyzePage } from './analyzePage'
-import { getGlobalContext } from '../globalContext'
-import type { MediaType } from './inferMediaType'
-import { loadPageCode } from '../../../shared/page-configs/loadPageCode'
+import { type PageFile, getExportUnion, getPageFilesServerSide, getExports } from '../../../shared/getPageFiles.js'
+import { analyzePageClientSideInit } from '../../../shared/getPageFiles/analyzePageClientSide.js'
+import { assertWarning, objectAssign, PromiseType } from '../utils.js'
+import { getPageAssets, PageContextGetPageAssets, type PageAsset } from './getPageAssets.js'
+import { debugPageFiles, type PageContextDebug } from './debugPageFiles.js'
+import type { PageConfig } from '../../../shared/page-configs/PageConfig.js'
+import { findPageConfig } from '../../../shared/page-configs/findPageConfig.js'
+import { analyzePage } from './analyzePage.js'
+import { getGlobalContext } from '../globalContext.js'
+import type { MediaType } from './inferMediaType.js'
+import { loadPageCode } from '../../../shared/page-configs/loadPageCode.js'
 
 type PageContext_loadPageFilesServerSide = PageContextGetPageAssets &
   PageContextDebug & {

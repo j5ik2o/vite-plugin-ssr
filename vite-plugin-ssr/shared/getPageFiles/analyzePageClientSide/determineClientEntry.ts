@@ -1,8 +1,8 @@
 export { determineClientEntry }
 export { getVPSClientEntry }
 
-import type { ClientDependency } from './ClientDependency'
-import type { PageFile } from '../../../shared/getPageFiles'
+import type { ClientDependency } from './ClientDependency.js'
+import type { PageFile } from '../../../shared/getPageFiles.js'
 
 function determineClientEntry({
   pageFilesClientSide,
@@ -44,8 +44,6 @@ function determineClientEntry({
 
 function getVPSClientEntry(isClientRouting: boolean) {
   return isClientRouting
-    ? // dist/client/entries/entry-client-routing.js
-      '@@vite-plugin-ssr/dist/esm/client/router/entry.js'
-    : // dist/client/entries/entry-server-routing.js
-      '@@vite-plugin-ssr/dist/esm/client/entry.js'
+    ? '@@vite-plugin-ssr/dist/esm/client/client-routing-runtime/entry.js'
+    : '@@vite-plugin-ssr/dist/esm/client/server-routing-runtime/entry.js'
 }

@@ -1,8 +1,8 @@
 export { analyzePageServerSide }
 
-import { assert } from '../utils'
-import { getPageFilesServerSide } from './getAllPageIdFiles'
-import type { PageFile } from './getPageFileObject'
+import { assert } from '../utils.js'
+import { getPageFilesServerSide } from './getAllPageIdFiles.js'
+import type { PageFile } from './getPageFileObject.js'
 
 async function analyzePageServerSide(pageFilesAll: PageFile[], pageId: string) {
   const pageFilesServerSide = getPageFilesServerSide(pageFilesAll, pageId)

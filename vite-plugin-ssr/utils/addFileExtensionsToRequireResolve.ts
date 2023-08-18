@@ -1,7 +1,7 @@
 export { addFileExtensionsToRequireResolve }
 
-import { assert } from './assert'
-import { scriptFileExtensionList } from './isScriptFile'
+import { assert } from './assert.js'
+import { scriptFileExtensionList } from './isScriptFile.js'
 
 function addFileExtensionsToRequireResolve() {
   const added: string[] = []
